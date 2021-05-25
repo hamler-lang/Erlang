@@ -2,7 +2,7 @@
 
 -module(random).
 
--deprecated({'_','_',"use the 'rand' module instead"}).
+-deprecated({_,_,"use the 'rand' module instead"}).
 
 -export([seed/0, seed/1, seed/3, uniform/0, uniform/1, uniform_s/1, uniform_s/2, seed0/0]).
 

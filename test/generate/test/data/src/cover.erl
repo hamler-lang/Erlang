@@ -14,7 +14,7 @@
 
 -record(remote_state, {compiled = [],main_node}).
 
--record(bump, {module = '_',function = '_',arity = '_',clause = '_',line = '_'}).
+-record(bump, {module = _,function = _,arity = _,clause = _,line = _}).
 
 -record(vars, {module,init_info = [],function,arity,clause,lines,no_bump_lines,depth,is_guard = false}).
 
@@ -198,20 +198,20 @@ get_mods_and_beams([],Acc) ->
     lists:reverse(Acc).
 
 analyse() ->
-    analyse('_').
+    analyse(_).
 
 analyse(Analysis)
     when Analysis =:= coverage orelse Analysis =:= calls->
-    analyse('_',Analysis);
+    analyse(_,Analysis);
 analyse(Level)
     when Level =:= line orelse Level =:= clause orelse Level =:= function orelse Level =:= module->
-    analyse('_',Level);
+    analyse(_,Level);
 analyse(Module) ->
     analyse(Module,coverage).
 
 analyse(Analysis,Level)
     when (Analysis =:= coverage orelse Analysis =:= calls) andalso (Level =:= line orelse Level =:= clause orelse Level =:= function orelse Level =:= module)->
-    analyse('_',Analysis,Level);
+    analyse(_,Analysis,Level);
 analyse(Module,Analysis)
     when Analysis =:= coverage orelse Analysis =:= calls->
     analyse(Module,Analysis,function);
@@ -237,12 +237,12 @@ analyze(Module,Analysis,Level) ->
     analyse(Module,Analysis,Level).
 
 analyse_to_file() ->
-    analyse_to_file('_').
+    analyse_to_file(_).
 
 analyse_to_file(Arg) ->
     case is_options(Arg) of
         true->
-            analyse_to_file('_',Arg);
+            analyse_to_file(_,Arg);
         false->
             analyse_to_file(Arg,[])
     end.
@@ -320,7 +320,7 @@ outfilename(Module,false) ->
     atom_to_list(Module) ++ ".COVER.out".
 
 export(File) ->
-    export(File,'_').
+    export(File,_).
 
 export(File,Module) ->
     call({export,File,Module}).
@@ -501,13 +501,13 @@ main_process_loop(State) ->
         reply(From,ok),
         main_process_loop(State#main_state{imported = []});
     {From,{stop,Nodes}}->
-        remote_collect('_',Nodes,true),
+        remote_collect(_,Nodes,true),
         reply(From,ok),
         Nodes1 = State#main_state.nodes -- Nodes,
         LostNodes1 = State#main_state.lost_nodes -- Nodes,
         main_process_loop(State#main_state{nodes = Nodes1,lost_nodes = LostNodes1});
     {From,{flush,Nodes}}->
-        remote_collect('_',Nodes,false),
+        remote_collect(_,Nodes,false),
         reply(From,ok),
         main_process_loop(State);
     {From,stop}->
@@ -522,7 +522,7 @@ main_process_loop(State) ->
         delete_all_counters(),
         unregister(cover_server),
         reply(From,ok);
-    {From,{{analyse,Analysis,Level},'_'}}->
+    {From,{{analyse,Analysis,Level},_}}->
         R = analyse_all(Analysis,Level,State),
         reply(From,R),
         main_process_loop(State);
@@ -542,7 +542,7 @@ main_process_loop(State) ->
                     reply(From,{error,{not_cover_compiled,Module}}),
                     not_loaded(Module,Reason,State) end,
         main_process_loop(S);
-    {From,{{analyse_to_file,Opts},'_'}}->
+    {From,{{analyse_to_file,Opts},_}}->
         R = analyse_all_to_file(Opts,State),
         reply(From,R),
         main_process_loop(State);
@@ -643,7 +643,7 @@ remote_process_loop(State) ->
         self() ! {remote,collect,Module,CollectorPid,cover_server};
     {remote,collect,Modules0,CollectorPid,From}->
         Modules = case Modules0 of
-            '_'->
+            _->
                 [M || {M,_} <- State#remote_state.compiled];
             _->
                 Modules0
@@ -1254,7 +1254,7 @@ expand(T,_Vs,N) ->
     {T,N}.
 
 vars(A,{var,_,V})
-    when V =/= '_'->
+    when V =/= _->
     [V| A];
 vars(A,T)
     when is_tuple(T)->
@@ -1270,7 +1270,7 @@ bool_switch(E,T,F,AllVars,AuxVarN) ->
     {'case',Line,E,[{clause,Line,[{atom,Line,true}],[],[T]}, {clause,Line,[{atom,Line,false}],[],[F]}, {clause,erl_anno:set_generated(true,Line),[AuxVar],[],[{call,Line,{remote,Line,{atom,Line,erlang},{atom,Line,error}},[{tuple,Line,[{atom,Line,badarg}, AuxVar]}]}]}]}.
 
 aux_var(Vars,N) ->
-    Name = list_to_atom(lists:concat(['_', N])),
+    Name = list_to_atom(lists:concat([_, N])),
     case sets:is_element(Name,Vars) of
         true->
             aux_var(Vars,N + 1);
@@ -1675,7 +1675,7 @@ move_counters(Mod) ->
     move_counters(Mod,fun insert_in_collection_table/1).
 
 move_counters(Mod,Process) ->
-    Pattern = {#bump{module = Mod,_ = '_'},'_'},
+    Pattern = {#bump{module = Mod,_ = _},_},
     Matches = ets:match_object(cover_internal_mapping_table,Pattern,20000),
     Cref = get_counters_ref(Mod),
     move_counters1(Matches,Cref,Process).
@@ -1700,18 +1700,18 @@ get_counters_ref(Mod) ->
     ets:lookup_element(cover_internal_mapping_table,{counters,Mod},2).
 
 counters_mapping(Mod) ->
-    Pattern = {#bump{module = Mod,_ = '_'},'_'},
+    Pattern = {#bump{module = Mod,_ = _},_},
     ets:match_object(cover_internal_mapping_table,Pattern).
 
 clear_counters(Mod) ->
     _ = persistent_term:erase({cover,Mod}),
     ets:delete(cover_internal_mapping_table,Mod),
-    Pattern = {#bump{module = Mod,_ = '_'},'_'},
+    Pattern = {#bump{module = Mod,_ = _},_},
     _ = ets:match_delete(cover_internal_mapping_table,Pattern),
     ok.
 
 reset_counters(Mod) ->
-    Pattern = {#bump{module = Mod,_ = '_'},'$1'},
+    Pattern = {#bump{module = Mod,_ = _},'$1'},
     MatchSpec = [{Pattern,[],['$1']}],
     Matches = ets:select(cover_internal_mapping_table,MatchSpec,20000),
     Cref = get_counters_ref(Mod),
@@ -1732,16 +1732,16 @@ collect(Nodes) ->
     Mon1 = spawn_monitor(fun ()->
         pmap(fun move_modules/1,AllClauses) end),
     Mon2 = spawn_monitor(fun ()->
-        remote_collect('_',Nodes,false) end),
+        remote_collect(_,Nodes,false) end),
     get_downs([Mon1, Mon2]).
 
 collect(Modules,Nodes) ->
-    MS = [{{'$1','_'},[{'==','$1',M}],['$_']} || M <- Modules],
+    MS = [{{'$1',_},[{'==','$1',M}],['$_']} || M <- Modules],
     Clauses = ets:select(cover_internal_clause_table,MS),
     Mon1 = spawn_monitor(fun ()->
         pmap(fun move_modules/1,Clauses) end),
     Mon2 = spawn_monitor(fun ()->
-        remote_collect('_',Nodes,false) end),
+        remote_collect(_,Nodes,false) end),
     get_downs([Mon1, Mon2]).
 
 collect(Module,Clauses,Nodes) ->
@@ -1793,7 +1793,7 @@ analyse_list(Modules,Analysis,Level,State) ->
     Loaded = [M || {M,_} <- LoadedMF],
     Imported = [M || {M,_} <- ImportedMF],
     collect(Loaded,State#main_state.nodes),
-    MS = [{{'$1','_'},[{'==','$1',M}],['$_']} || M <- Loaded ++ Imported],
+    MS = [{{'$1',_},[{'==','$1',M}],['$_']} || M <- Loaded ++ Imported],
     AllClauses = ets:select(cover_collected_remote_clause_table,MS),
     Fun = fun ({Module,Clauses})->
         do_analyse(Module,Analysis,Level,Clauses) end,
@@ -1821,7 +1821,7 @@ do_parallel_analysis(Module,Analysis,Level,Loaded,From,State) ->
     reply(From,{ok,R}).
 
 do_analyse(Module,Analysis,line,_Clauses) ->
-    Pattern = {#bump{module = Module},'_'},
+    Pattern = {#bump{module = Module},_},
     Bumps = ets:match_object(cover_collected_remote_data_table,Pattern),
     Fun = case Analysis of
         coverage->
@@ -1834,7 +1834,7 @@ do_analyse(Module,Analysis,line,_Clauses) ->
     end,
     lists:keysort(1,lists:map(Fun,Bumps));
 do_analyse(Module,Analysis,clause,_Clauses) ->
-    Pattern = {#bump{module = Module},'_'},
+    Pattern = {#bump{module = Module},_},
     Bumps = lists:keysort(1,ets:match_object(cover_collected_remote_data_table,Pattern)),
     analyse_clause(Analysis,Bumps);
 do_analyse(Module,Analysis,function,Clauses) ->
@@ -1984,7 +1984,7 @@ do_analyse_to_file1(Module,OutFile,ErlFile,HTML) ->
                         ["File generated from ", ErlFile, " by COVER ", Timestamp, "\n\n", "*************************************" "*************************************" "**\n\n"] end,
                     H2Bin = unicode:characters_to_binary(OutFileInfo,Enc,Enc),
                     ok = file:write(OutFd,H2Bin),
-                    Pattern = {#bump{module = Module,line = '$1',_ = '_'},'$2'},
+                    Pattern = {#bump{module = Module,line = '$1',_ = _},'$2'},
                     MS = [{Pattern,[{is_integer,'$1'}, {'>','$1',0}],[{{'$1','$2'}}]}],
                     CovLines0 = lists:keysort(1,ets:select(cover_collected_remote_data_table,MS)),
                     CovLines = merge_dup_lines(CovLines0),
@@ -2090,7 +2090,7 @@ do_export(Module,OutFile,From,State) ->
     case file:open(OutFile,[write, binary, raw, delayed_write]) of
         {ok,Fd}->
             Reply = case Module of
-                '_'->
+                _->
                     export_info(State#main_state.imported),
                     collect(State#main_state.nodes),
                     do_export_table(State#main_state.compiled,State#main_state.imported,Fd);
@@ -2132,7 +2132,7 @@ write_module_data([{Module,File}| ModList],Fd) ->
     write({file,Module,File},Fd),
     [Clauses] = ets:lookup(cover_collected_remote_clause_table,Module),
     write(Clauses,Fd),
-    ModuleData = ets:match_object(cover_collected_remote_data_table,{#bump{module = Module},'_'}),
+    ModuleData = ets:match_object(cover_collected_remote_data_table,{#bump{module = Module},_}),
     do_write_module_data(ModuleData,Fd),
     write_module_data(ModList,Fd);
 write_module_data([],_Fd) ->
@@ -2210,14 +2210,14 @@ do_reset_main_node(Module,Nodes) ->
 
 do_reset_collection_table(Module) ->
     ets:delete(cover_collected_remote_clause_table,Module),
-    ets:match_delete(cover_collected_remote_data_table,{#bump{module = Module},'_'}).
+    ets:match_delete(cover_collected_remote_data_table,{#bump{module = Module},_}).
 
 do_clear(Module) ->
-    ets:match_delete(cover_internal_clause_table,{Module,'_'}),
+    ets:match_delete(cover_internal_clause_table,{Module,_}),
     clear_counters(Module),
     case lists:member(cover_collected_remote_data_table,ets:all()) of
         true->
-            ets:match_delete(cover_collected_remote_data_table,{#bump{module = Module},'_'});
+            ets:match_delete(cover_collected_remote_data_table,{#bump{module = Module},_});
         false->
             ok
     end.

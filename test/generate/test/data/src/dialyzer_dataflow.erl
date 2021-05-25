@@ -207,7 +207,7 @@ traverse(Tree,Map,State) ->
                     State4 = state__add_reachable(FunLbl,State3),
                     {State4,Map,Type}
             end;
-        'let'->
+        let->
             handle_let(Tree,Map,State);
         letrec->
             Defs = cerl:letrec_defs(Tree),
@@ -1691,7 +1691,7 @@ bind_guard(Guard,Map,Env,Eval,State) ->
                 _PosOrNeg->
                     {Map,t_none()}
             end;
-        'let'->
+        let->
             Arg = cerl:let_arg(Guard),
             [Var] = cerl:let_vars(Guard),
             NewEnv = maps:put(get_label(Var),Arg,Env),
@@ -3457,7 +3457,7 @@ format_patterns(Pats0) ->
     String = format_cerl(NewPats),
     case Pats of
         [PosVar]->
-            case cerl:is_c_var(PosVar) andalso cerl:var_name(PosVar) =/= '' of
+            case cerl:is_c_var(PosVar) andalso cerl:var_name(PosVar) =/=  of
                 true->
                     "variable " ++ String;
                 false->
@@ -3476,16 +3476,16 @@ map_pats(Pats) ->
                         when is_atom(Atom)->
                         case atom_to_list(Atom) of
                             "@" ++ _->
-                                cerl:c_var('');
+                                cerl:c_var();
                             "cor" ++ _->
-                                cerl:c_var('');
+                                cerl:c_var();
                             "rec" ++ _->
-                                cerl:c_var('');
+                                cerl:c_var();
                             _->
                                 cerl:set_ann(Tree,[])
                         end;
                     _What->
-                        cerl:c_var('')
+                        cerl:c_var()
                 end;
             false->
                 cerl:set_ann(Tree,[])
@@ -3614,7 +3614,7 @@ find_terminals(Tree) ->
             {false,true};
         'fun'->
             {false,true};
-        'let'->
+        let->
             find_terminals(cerl:let_body(Tree));
         letrec->
             find_terminals(cerl:letrec_body(Tree));

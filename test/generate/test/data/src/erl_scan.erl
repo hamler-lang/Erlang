@@ -10,7 +10,7 @@
 
 -export_type([error_info/0, options/0, return_cont/0, token/0, tokens_result/0]).
 
--removed([{set_attribute,3,"use erl_anno:set_line/2 instead"}, {attributes_info,'_',"erl_anno:{column,line,location,text}/1 instead"}, {token_info,'_',"erl_scan:{category,column,line,location,symbol,text}/1 inst" "ead"}]).
+-removed([{set_attribute,3,"use erl_anno:set_line/2 instead"}, {attributes_info,_,"erl_anno:{column,line,location,text}/1 instead"}, {token_info,_,"erl_scan:{category,column,line,location,symbol,text}/1 inst" "ead"}]).
 
 -removed_type([{column,0,"use erl_anno:column() instead"}, {line,0,"use erl_anno:line() instead"}, {location,0,"use erl_anno:location() instead"}]).
 
@@ -399,7 +399,7 @@ scan1([$!| Cs],St,Line,Col,Toks) ->
 scan1([$@| Cs],St,Line,Col,Toks) ->
     tok2(Cs,St,Line,Col,Toks,"@",'@',1);
 scan1([$\\| Cs],St,Line,Col,Toks) ->
-    tok2(Cs,St,Line,Col,Toks,"\\",'\\',1);
+    tok2(Cs,St,Line,Col,Toks,"\\",'\\\\',1);
 scan1([$^| Cs],St,Line,Col,Toks) ->
     tok2(Cs,St,Line,Col,Toks,"^",'^',1);
 scan1([$`| Cs],St,Line,Col,Toks) ->
@@ -1224,7 +1224,7 @@ reserved_word('case') ->
     true;
 reserved_word('try') ->
     true;
-reserved_word('cond') ->
+reserved_word(cond) ->
     true;
 reserved_word('catch') ->
     true;
@@ -1238,7 +1238,7 @@ reserved_word('fun') ->
     true;
 reserved_word('if') ->
     true;
-reserved_word('let') ->
+reserved_word(let) ->
     true;
 reserved_word('of') ->
     true;

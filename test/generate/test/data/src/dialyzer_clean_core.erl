@@ -42,7 +42,7 @@ clean(Tree) ->
             Body = clean(cerl:fun_body(Tree)),
             Vars = cerl:fun_vars(Tree),
             cerl:update_c_fun(Tree,Vars,Body);
-        'let'->
+        let->
             Arg = clean(cerl:let_arg(Tree)),
             Body = clean(cerl:let_body(Tree)),
             Vars = cerl:let_vars(Tree),

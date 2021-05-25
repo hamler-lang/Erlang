@@ -22,17 +22,12 @@ library
     exposed-modules:  CoreErlang.Type
                     , CoreErlang.A
                     , CoreErlang.B
-                    , CoreErlang.NoAnnType
-                    , CoreErlang.SimpleType
-                    , CoreErlang.Translate
                     , CoreErlang.Pretty
 
-                    
                     , Erlang.A
                     , Erlang.B
                     , Erlang.Type
                     , Erlang.Pretty
-                    , Erlang.T
                     , Utils
 
     -- Modules included in this library but not exported.
@@ -47,6 +42,7 @@ library
                     , doclayout
                     , directory
                     , filepath
+                    , containers
     hs-source-dirs:   src
     default-language: Haskell2010
 

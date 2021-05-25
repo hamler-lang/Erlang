@@ -114,7 +114,7 @@
 
 -record('EDIPartyName', {nameAssigner = asn1_NOVALUE,partyName}).
 
--record('AnotherName', {'type-id',value}).
+-record('AnotherName', {type-id,value}).
 
 -record('PolicyMappings_SEQOF', {issuerDomainPolicy,subjectDomainPolicy}).
 
@@ -212,23 +212,23 @@
 
 -record('PresentationAddress', {pSelector = asn1_NOVALUE,sSelector = asn1_NOVALUE,tSelector = asn1_NOVALUE,nAddresses}).
 
--record('ExtendedNetworkAddress_e163-4-address', {number,'sub-address' = asn1_NOVALUE}).
+-record('ExtendedNetworkAddress_e163-4-address', {number,sub-address = asn1_NOVALUE}).
 
--record('PDSParameter', {'printable-string' = asn1_NOVALUE,'teletex-string' = asn1_NOVALUE}).
+-record('PDSParameter', {printable-string = asn1_NOVALUE,teletex-string = asn1_NOVALUE}).
 
--record('UnformattedPostalAddress', {'printable-address' = asn1_NOVALUE,'teletex-string' = asn1_NOVALUE}).
+-record('UnformattedPostalAddress', {printable-address = asn1_NOVALUE,teletex-string = asn1_NOVALUE}).
 
--record('TeletexPersonalName', {surname,'given-name' = asn1_NOVALUE,initials = asn1_NOVALUE,'generation-qualifier' = asn1_NOVALUE}).
+-record('TeletexPersonalName', {surname,given-name = asn1_NOVALUE,initials = asn1_NOVALUE,generation-qualifier = asn1_NOVALUE}).
 
--record('ExtensionAttribute', {'extension-attribute-type','extension-attribute-value'}).
+-record('ExtensionAttribute', {extension-attribute-type,extension-attribute-value}).
 
 -record('BuiltInDomainDefinedAttribute', {type,value}).
 
--record('PersonalName', {surname,'given-name' = asn1_NOVALUE,initials = asn1_NOVALUE,'generation-qualifier' = asn1_NOVALUE}).
+-record('PersonalName', {surname,given-name = asn1_NOVALUE,initials = asn1_NOVALUE,generation-qualifier = asn1_NOVALUE}).
 
--record('BuiltInStandardAttributes', {'country-name' = asn1_NOVALUE,'administration-domain-name' = asn1_NOVALUE,'network-address' = asn1_NOVALUE,'terminal-identifier' = asn1_NOVALUE,'private-domain-name' = asn1_NOVALUE,'organization-name' = asn1_NOVALUE,'numeric-user-identifier' = asn1_NOVALUE,'personal-name' = asn1_NOVALUE,'organizational-unit-names' = asn1_NOVALUE}).
+-record('BuiltInStandardAttributes', {country-name = asn1_NOVALUE,administration-domain-name = asn1_NOVALUE,network-address = asn1_NOVALUE,terminal-identifier = asn1_NOVALUE,private-domain-name = asn1_NOVALUE,organization-name = asn1_NOVALUE,numeric-user-identifier = asn1_NOVALUE,personal-name = asn1_NOVALUE,organizational-unit-names = asn1_NOVALUE}).
 
--record('ORAddress', {'built-in-standard-attributes','built-in-domain-defined-attributes' = asn1_NOVALUE,'extension-attributes' = asn1_NOVALUE}).
+-record('ORAddress', {built-in-standard-attributes,built-in-domain-defined-attributes = asn1_NOVALUE,extension-attributes = asn1_NOVALUE}).
 
 -record('AlgorithmIdentifier', {algorithm,parameters = asn1_NOVALUE}).
 
@@ -406,15 +406,15 @@
 
 -type(alg_entry()::{kex,[kex_alg()]}|{public_key,[pubkey_alg()]}|{cipher,double_algs(cipher_alg())}|{mac,double_algs(mac_alg())}|{compression,double_algs(compression_alg())}).
 
--type(kex_alg()::'diffie-hellman-group-exchange-sha1'|'diffie-hellman-group-exchange-sha256'|'diffie-hellman-group1-sha1'|'diffie-hellman-group14-sha1'|'diffie-hellman-group14-sha256'|'diffie-hellman-group16-sha512'|'diffie-hellman-group18-sha512'|'curve25519-sha256'|'curve25519-sha256@libssh.org'|'curve448-sha512'|'ecdh-sha2-nistp256'|'ecdh-sha2-nistp384'|'ecdh-sha2-nistp521').
+-type(kex_alg()::diffie-hellman-group-exchange-sha1|diffie-hellman-group-exchange-sha256|diffie-hellman-group1-sha1|diffie-hellman-group14-sha1|diffie-hellman-group14-sha256|diffie-hellman-group16-sha512|diffie-hellman-group18-sha512|curve25519-sha256|curve25519-sha256@libssh.org|curve448-sha512|ecdh-sha2-nistp256|ecdh-sha2-nistp384|ecdh-sha2-nistp521).
 
--type(pubkey_alg()::'ecdsa-sha2-nistp256'|'ecdsa-sha2-nistp384'|'ecdsa-sha2-nistp521'|'ssh-ed25519'|'ssh-ed448'|'rsa-sha2-256'|'rsa-sha2-512'|'ssh-dss'|'ssh-rsa').
+-type(pubkey_alg()::ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521|ssh-ed25519|ssh-ed448|rsa-sha2-256|rsa-sha2-512|ssh-dss|ssh-rsa).
 
--type(cipher_alg()::'3des-cbc'|'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|'aes128-cbc'|'aes128-ctr'|'aes128-gcm@openssh.com'|'aes192-ctr'|'aes192-cbc'|'aes256-cbc'|'aes256-ctr'|'aes256-gcm@openssh.com'|'chacha20-poly1305@openssh.com').
+-type(cipher_alg()::'3des-cbc'|'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|aes128-cbc|aes128-ctr|aes128-gcm@openssh.com|aes192-ctr|aes192-cbc|aes256-cbc|aes256-ctr|aes256-gcm@openssh.com|chacha20-poly1305@openssh.com).
 
--type(mac_alg()::'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|'hmac-sha1'|'hmac-sha1-etm@openssh.com'|'hmac-sha1-96'|'hmac-sha2-256'|'hmac-sha2-512'|'hmac-sha2-256-etm@openssh.com'|'hmac-sha2-512-etm@openssh.com').
+-type(mac_alg()::'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|hmac-sha1|hmac-sha1-etm@openssh.com|hmac-sha1-96|hmac-sha2-256|hmac-sha2-512|hmac-sha2-256-etm@openssh.com|hmac-sha2-512-etm@openssh.com).
 
--type(compression_alg()::none|zlib|'zlib@openssh.com').
+-type(compression_alg()::none|zlib|zlib@openssh.com).
 
 -type(double_algs(AlgType)::[{client2server,[AlgType]}|{server2client,[AlgType]}]|[AlgType]).
 
@@ -498,23 +498,23 @@
 
 -type(shell_spec()::mod_fun_args()|shell_fun()|disabled).
 
--type(shell_fun()::'shell_fun/1'()|'shell_fun/2'()).
+-type(shell_fun()::shell_fun/1()|shell_fun/2()).
 
--type('shell_fun/1'()::fun((User::string()) -> pid())).
+-type(shell_fun/1()::fun((User::string()) -> pid())).
 
--type('shell_fun/2'()::fun((User::string(),PeerAddr::inet:ip_address()) -> pid())).
+-type(shell_fun/2()::fun((User::string(),PeerAddr::inet:ip_address()) -> pid())).
 
 -type(exec_daemon_option()::{exec,exec_spec()}).
 
 -type(exec_spec()::{direct,exec_fun()}|disabled|deprecated_exec_opt()).
 
--type(exec_fun()::'exec_fun/1'()|'exec_fun/2'()|'exec_fun/3'()).
+-type(exec_fun()::exec_fun/1()|exec_fun/2()|exec_fun/3()).
 
--type('exec_fun/1'()::fun((Cmd::string()) -> exec_result())).
+-type(exec_fun/1()::fun((Cmd::string()) -> exec_result())).
 
--type('exec_fun/2'()::fun((Cmd::string(),User::string()) -> exec_result())).
+-type(exec_fun/2()::fun((Cmd::string(),User::string()) -> exec_result())).
 
--type('exec_fun/3'()::fun((Cmd::string(),User::string(),ClientAddr::ip_port()) -> exec_result())).
+-type(exec_fun/3()::fun((Cmd::string(),User::string(),ClientAddr::ip_port()) -> exec_result())).
 
 -type(exec_result()::{ok,Result::term()}|{error,Reason::term()}).
 
@@ -707,13 +707,13 @@ default_algorithms(Tag) ->
     end.
 
 default_algorithms1(kex) ->
-    supported_algorithms(kex,['diffie-hellman-group1-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group-exchange-sha1']);
+    supported_algorithms(kex,[diffie-hellman-group1-sha1, diffie-hellman-group14-sha1, diffie-hellman-group-exchange-sha1]);
 default_algorithms1(cipher) ->
     supported_algorithms(cipher,same(['AEAD_AES_128_GCM', 'AEAD_AES_256_GCM']));
 default_algorithms1(mac) ->
-    supported_algorithms(mac,same(['AEAD_AES_128_GCM', 'AEAD_AES_256_GCM', 'hmac-sha1-96']));
+    supported_algorithms(mac,same(['AEAD_AES_128_GCM', 'AEAD_AES_256_GCM', hmac-sha1-96]));
 default_algorithms1(public_key) ->
-    supported_algorithms(public_key,['ssh-dss']);
+    supported_algorithms(public_key,[ssh-dss]);
 default_algorithms1(Alg) ->
     supported_algorithms(Alg,[]).
 
@@ -721,15 +721,15 @@ supported_algorithms() ->
     [{K,supported_algorithms(K)} || K <- algo_classes()].
 
 supported_algorithms(kex) ->
-    select_crypto_supported([{'ecdh-sha2-nistp384',[{public_keys,ecdh}, {curves,secp384r1}, {hashs,sha384}]}, {'ecdh-sha2-nistp521',[{public_keys,ecdh}, {curves,secp521r1}, {hashs,sha512}]}, {'ecdh-sha2-nistp256',[{public_keys,ecdh}, {curves,secp256r1}, {hashs,sha256}]}, {'diffie-hellman-group-exchange-sha256',[{public_keys,dh}, {hashs,sha256}]}, {'diffie-hellman-group16-sha512',[{public_keys,dh}, {hashs,sha512}]}, {'diffie-hellman-group18-sha512',[{public_keys,dh}, {hashs,sha512}]}, {'diffie-hellman-group14-sha256',[{public_keys,dh}, {hashs,sha256}]}, {'curve25519-sha256',[{public_keys,ecdh}, {curves,x25519}, {hashs,sha256}]}, {'curve25519-sha256@libssh.org',[{public_keys,ecdh}, {curves,x25519}, {hashs,sha256}]}, {'curve448-sha512',[{public_keys,ecdh}, {curves,x448}, {hashs,sha512}]}, {'diffie-hellman-group14-sha1',[{public_keys,dh}, {hashs,sha}]}, {'diffie-hellman-group-exchange-sha1',[{public_keys,dh}, {hashs,sha}]}, {'diffie-hellman-group1-sha1',[{public_keys,dh}, {hashs,sha}]}]);
+    select_crypto_supported([{ecdh-sha2-nistp384,[{public_keys,ecdh}, {curves,secp384r1}, {hashs,sha384}]}, {ecdh-sha2-nistp521,[{public_keys,ecdh}, {curves,secp521r1}, {hashs,sha512}]}, {ecdh-sha2-nistp256,[{public_keys,ecdh}, {curves,secp256r1}, {hashs,sha256}]}, {diffie-hellman-group-exchange-sha256,[{public_keys,dh}, {hashs,sha256}]}, {diffie-hellman-group16-sha512,[{public_keys,dh}, {hashs,sha512}]}, {diffie-hellman-group18-sha512,[{public_keys,dh}, {hashs,sha512}]}, {diffie-hellman-group14-sha256,[{public_keys,dh}, {hashs,sha256}]}, {curve25519-sha256,[{public_keys,ecdh}, {curves,x25519}, {hashs,sha256}]}, {curve25519-sha256@libssh.org,[{public_keys,ecdh}, {curves,x25519}, {hashs,sha256}]}, {curve448-sha512,[{public_keys,ecdh}, {curves,x448}, {hashs,sha512}]}, {diffie-hellman-group14-sha1,[{public_keys,dh}, {hashs,sha}]}, {diffie-hellman-group-exchange-sha1,[{public_keys,dh}, {hashs,sha}]}, {diffie-hellman-group1-sha1,[{public_keys,dh}, {hashs,sha}]}]);
 supported_algorithms(public_key) ->
-    select_crypto_supported([{'ecdsa-sha2-nistp384',[{public_keys,ecdsa}, {hashs,sha384}, {curves,secp384r1}]}, {'ecdsa-sha2-nistp521',[{public_keys,ecdsa}, {hashs,sha512}, {curves,secp521r1}]}, {'ecdsa-sha2-nistp256',[{public_keys,ecdsa}, {hashs,sha256}, {curves,secp256r1}]}, {'ssh-ed25519',[{public_keys,eddsa}, {curves,ed25519}]}, {'ssh-ed448',[{public_keys,eddsa}, {curves,ed448}]}, {'rsa-sha2-256',[{public_keys,rsa}, {hashs,sha256}]}, {'rsa-sha2-512',[{public_keys,rsa}, {hashs,sha512}]}, {'ssh-rsa',[{public_keys,rsa}, {hashs,sha}]}, {'ssh-dss',[{public_keys,dss}, {hashs,sha}]}]);
+    select_crypto_supported([{ecdsa-sha2-nistp384,[{public_keys,ecdsa}, {hashs,sha384}, {curves,secp384r1}]}, {ecdsa-sha2-nistp521,[{public_keys,ecdsa}, {hashs,sha512}, {curves,secp521r1}]}, {ecdsa-sha2-nistp256,[{public_keys,ecdsa}, {hashs,sha256}, {curves,secp256r1}]}, {ssh-ed25519,[{public_keys,eddsa}, {curves,ed25519}]}, {ssh-ed448,[{public_keys,eddsa}, {curves,ed448}]}, {rsa-sha2-256,[{public_keys,rsa}, {hashs,sha256}]}, {rsa-sha2-512,[{public_keys,rsa}, {hashs,sha512}]}, {ssh-rsa,[{public_keys,rsa}, {hashs,sha}]}, {ssh-dss,[{public_keys,dss}, {hashs,sha}]}]);
 supported_algorithms(cipher) ->
-    same(select_crypto_supported([{'chacha20-poly1305@openssh.com',[{ciphers,chacha20}, {macs,poly1305}]}, {'aes256-gcm@openssh.com',[{ciphers,aes_256_gcm}]}, {'aes256-ctr',[{ciphers,aes_256_ctr}]}, {'aes192-ctr',[{ciphers,aes_192_ctr}]}, {'aes128-gcm@openssh.com',[{ciphers,aes_128_gcm}]}, {'aes128-ctr',[{ciphers,aes_128_ctr}]}, {'AEAD_AES_256_GCM',[{ciphers,aes_256_gcm}]}, {'AEAD_AES_128_GCM',[{ciphers,aes_128_gcm}]}, {'aes256-cbc',[{ciphers,aes_256_cbc}]}, {'aes192-cbc',[{ciphers,aes_192_cbc}]}, {'aes128-cbc',[{ciphers,aes_128_cbc}]}, {'3des-cbc',[{ciphers,des_ede3_cbc}]}]));
+    same(select_crypto_supported([{chacha20-poly1305@openssh.com,[{ciphers,chacha20}, {macs,poly1305}]}, {aes256-gcm@openssh.com,[{ciphers,aes_256_gcm}]}, {aes256-ctr,[{ciphers,aes_256_ctr}]}, {aes192-ctr,[{ciphers,aes_192_ctr}]}, {aes128-gcm@openssh.com,[{ciphers,aes_128_gcm}]}, {aes128-ctr,[{ciphers,aes_128_ctr}]}, {'AEAD_AES_256_GCM',[{ciphers,aes_256_gcm}]}, {'AEAD_AES_128_GCM',[{ciphers,aes_128_gcm}]}, {aes256-cbc,[{ciphers,aes_256_cbc}]}, {aes192-cbc,[{ciphers,aes_192_cbc}]}, {aes128-cbc,[{ciphers,aes_128_cbc}]}, {'3des-cbc',[{ciphers,des_ede3_cbc}]}]));
 supported_algorithms(mac) ->
-    same(select_crypto_supported([{'hmac-sha2-256-etm@openssh.com',[{macs,hmac}, {hashs,sha256}]}, {'hmac-sha2-512-etm@openssh.com',[{macs,hmac}, {hashs,sha256}]}, {'hmac-sha2-256',[{macs,hmac}, {hashs,sha256}]}, {'hmac-sha2-512',[{macs,hmac}, {hashs,sha512}]}, {'hmac-sha1-etm@openssh.com',[{macs,hmac}, {hashs,sha256}]}, {'hmac-sha1',[{macs,hmac}, {hashs,sha}]}, {'hmac-sha1-96',[{macs,hmac}, {hashs,sha}]}, {'AEAD_AES_128_GCM',[{ciphers,aes_128_gcm}]}, {'AEAD_AES_256_GCM',[{ciphers,aes_256_gcm}]}]));
+    same(select_crypto_supported([{hmac-sha2-256-etm@openssh.com,[{macs,hmac}, {hashs,sha256}]}, {hmac-sha2-512-etm@openssh.com,[{macs,hmac}, {hashs,sha256}]}, {hmac-sha2-256,[{macs,hmac}, {hashs,sha256}]}, {hmac-sha2-512,[{macs,hmac}, {hashs,sha512}]}, {hmac-sha1-etm@openssh.com,[{macs,hmac}, {hashs,sha256}]}, {hmac-sha1,[{macs,hmac}, {hashs,sha}]}, {hmac-sha1-96,[{macs,hmac}, {hashs,sha}]}, {'AEAD_AES_128_GCM',[{ciphers,aes_128_gcm}]}, {'AEAD_AES_256_GCM',[{ciphers,aes_256_gcm}]}]));
 supported_algorithms(compression) ->
-    same([none, 'zlib@openssh.com', zlib]).
+    same([none, zlib@openssh.com, zlib]).
 
 versions(client,Options) ->
     Vsn = ssh_options:get_value(internal_options,vsn,Options,fun ()->
@@ -805,7 +805,7 @@ adjust_algs_for_peer_version(server,PrefAlgs,#ssh{c_version = V}) ->
 
 adjust_algs_for_peer_version("SSH-2.0-OpenSSH_6.2" ++ _,PrefAlgs) ->
     C0 = proplists:get_value(cipher,PrefAlgs,same([])),
-    C = [{D,L} || D <- [client2server, server2client],L <- [[K || K <- proplists:get_value(D,C0,[]),K =/= 'aes256-gcm@openssh.com',K =/= 'aes128-gcm@openssh.com']]],
+    C = [{D,L} || D <- [client2server, server2client],L <- [[K || K <- proplists:get_value(D,C0,[]),K =/= aes256-gcm@openssh.com,K =/= aes128-gcm@openssh.com]]],
     lists:keyreplace(cipher,1,PrefAlgs,{cipher,C});
 adjust_algs_for_peer_version(_,PrefAlgs) ->
     PrefAlgs.
@@ -877,19 +877,19 @@ verify_algorithm(#alg{kex = Kex}) ->
     end.
 
 key_exchange_first_msg(Kex,Ssh0)
-    when Kex == 'diffie-hellman-group1-sha1';
-    Kex == 'diffie-hellman-group14-sha1';
-    Kex == 'diffie-hellman-group14-sha256';
-    Kex == 'diffie-hellman-group16-sha512';
-    Kex == 'diffie-hellman-group18-sha512'->
+    when Kex == diffie-hellman-group1-sha1;
+    Kex == diffie-hellman-group14-sha1;
+    Kex == diffie-hellman-group14-sha256;
+    Kex == diffie-hellman-group16-sha512;
+    Kex == diffie-hellman-group18-sha512->
     {G,P} = dh_group(Kex),
     Sz = dh_bits(Ssh0#ssh.algorithms),
     {Public,Private} = generate_key(dh,[P, G, 2 * Sz]),
     {SshPacket,Ssh1} = ssh_packet(#ssh_msg_kexdh_init{e = Public},Ssh0),
     {ok,SshPacket,Ssh1#ssh{keyex_key = {{Private,Public},{G,P}}}};
 key_exchange_first_msg(Kex,Ssh0 = #ssh{opts = Opts})
-    when Kex == 'diffie-hellman-group-exchange-sha1';
-    Kex == 'diffie-hellman-group-exchange-sha256'->
+    when Kex == diffie-hellman-group-exchange-sha1;
+    Kex == diffie-hellman-group-exchange-sha256->
     {Min,NBits0,Max} = ssh_options:get_value(user_options,dh_gex_limits,Opts,ssh_transport,437),
     DhBits = dh_bits(Ssh0#ssh.algorithms),
     NBits1 = if DhBits =< 112 ->
@@ -901,12 +901,12 @@ key_exchange_first_msg(Kex,Ssh0 = #ssh{opts = Opts})
     {SshPacket,Ssh1} = ssh_packet(#ssh_msg_kex_dh_gex_request{min = Min,n = NBits,max = Max},Ssh0),
     {ok,SshPacket,Ssh1#ssh{keyex_info = {Min,Max,NBits}}};
 key_exchange_first_msg(Kex,Ssh0)
-    when Kex == 'ecdh-sha2-nistp256';
-    Kex == 'ecdh-sha2-nistp384';
-    Kex == 'ecdh-sha2-nistp521';
-    Kex == 'curve25519-sha256';
-    Kex == 'curve25519-sha256@libssh.org';
-    Kex == 'curve448-sha512'->
+    when Kex == ecdh-sha2-nistp256;
+    Kex == ecdh-sha2-nistp384;
+    Kex == ecdh-sha2-nistp521;
+    Kex == curve25519-sha256;
+    Kex == curve25519-sha256@libssh.org;
+    Kex == curve448-sha512->
     Curve = ecdh_curve(Kex),
     {Public,Private} = generate_key(ecdh,Curve),
     {SshPacket,Ssh1} = ssh_packet(#ssh_msg_kex_ecdh_init{q_c = Public},Ssh0),
@@ -1187,13 +1187,13 @@ yes_no(#ssh{opts = Opts},Prompt) ->
         ssh_io end,ssh_transport,929),
     IoCb:yes_no(Prompt,Opts).
 
-fmt_hostkey('ssh-rsa') ->
+fmt_hostkey(ssh-rsa) ->
     "RSA";
-fmt_hostkey('ssh-dss') ->
+fmt_hostkey(ssh-dss) ->
     "DSA";
-fmt_hostkey('ssh-ed25519') ->
+fmt_hostkey(ssh-ed25519) ->
     "ED25519";
-fmt_hostkey('ssh-ed448') ->
+fmt_hostkey(ssh-ed448) ->
     "ED448";
 fmt_hostkey(A)
     when is_atom(A)->
@@ -1257,9 +1257,9 @@ select_algorithm(Role,Client,Server,Opts) ->
     RecvExtInfo = ssh_options:get_value(user_options,recv_ext_info,Opts,ssh_transport,1026),
     {ok,#alg{kex = Kex,hkey = HK,encrypt = Encrypt,decrypt = Decrypt,send_mac = SendMac,recv_mac = RecvMac,compress = Compression,decompress = Decompression,c_lng = C_Lng,s_lng = S_Lng,send_ext_info = SendExtInfo,recv_ext_info = RecvExtInfo}}.
 
-aead_gcm_simultan('aes128-gcm@openssh.com',_) ->
+aead_gcm_simultan(aes128-gcm@openssh.com,_) ->
     {'AEAD_AES_128_GCM','AEAD_AES_128_GCM'};
-aead_gcm_simultan('aes256-gcm@openssh.com',_) ->
+aead_gcm_simultan(aes256-gcm@openssh.com,_) ->
     {'AEAD_AES_256_GCM','AEAD_AES_256_GCM'};
 aead_gcm_simultan('AEAD_AES_128_GCM' = C,_) ->
     {C,C};
@@ -1269,7 +1269,7 @@ aead_gcm_simultan(_,'AEAD_AES_128_GCM' = C) ->
     {C,C};
 aead_gcm_simultan(_,'AEAD_AES_256_GCM' = C) ->
     {C,C};
-aead_gcm_simultan('chacha20-poly1305@openssh.com' = C,_) ->
+aead_gcm_simultan(chacha20-poly1305@openssh.com = C,_) ->
     {C,C};
 aead_gcm_simultan(Cipher,Mac) ->
     {Cipher,Mac}.
@@ -1476,7 +1476,7 @@ get_length(common,enc_then_mac,EncryptedBuffer,Ssh) ->
     end;
 get_length(aead,_,EncryptedBuffer,Ssh) ->
     case {size(EncryptedBuffer) >= 4,Ssh#ssh.decrypt} of
-        {true,'chacha20-poly1305@openssh.com'}->
+        {true,chacha20-poly1305@openssh.com}->
             <<EncryptedLen:4/binary,EncryptedRest/binary>> = EncryptedBuffer,
             {Ssh1,PacketLenBin} = decrypt(Ssh,{length,EncryptedLen}),
             <<PacketLen:32/unsigned-big-integer>> = PacketLenBin,
@@ -1555,19 +1555,19 @@ cipher('AEAD_AES_256_GCM') ->
     #cipher{impl = aes_256_gcm,key_bytes = 32,iv_bytes = 12,block_bytes = 16,pkt_type = aead};
 cipher('3des-cbc') ->
     #cipher{impl = des_ede3_cbc,key_bytes = 24,iv_bytes = 8,block_bytes = 8};
-cipher('aes128-cbc') ->
+cipher(aes128-cbc) ->
     #cipher{impl = aes_128_cbc,key_bytes = 16,iv_bytes = 16,block_bytes = 16};
-cipher('aes192-cbc') ->
+cipher(aes192-cbc) ->
     #cipher{impl = aes_192_cbc,key_bytes = 24,iv_bytes = 16,block_bytes = 16};
-cipher('aes256-cbc') ->
+cipher(aes256-cbc) ->
     #cipher{impl = aes_256_cbc,key_bytes = 32,iv_bytes = 16,block_bytes = 16};
-cipher('aes128-ctr') ->
+cipher(aes128-ctr) ->
     #cipher{impl = aes_128_ctr,key_bytes = 16,iv_bytes = 16,block_bytes = 16};
-cipher('aes192-ctr') ->
+cipher(aes192-ctr) ->
     #cipher{impl = aes_192_ctr,key_bytes = 24,iv_bytes = 16,block_bytes = 16};
-cipher('aes256-ctr') ->
+cipher(aes256-ctr) ->
     #cipher{impl = aes_256_ctr,key_bytes = 32,iv_bytes = 16,block_bytes = 16};
-cipher('chacha20-poly1305@openssh.com') ->
+cipher(chacha20-poly1305@openssh.com) ->
     #cipher{impl = chacha20_poly1305,key_bytes = 32,iv_bytes = 12,block_bytes = 8,pkt_type = aead};
 cipher(_) ->
     #cipher{}.
@@ -1575,11 +1575,11 @@ cipher(_) ->
 pkt_type(SshCipher) ->
     (cipher(SshCipher))#cipher.pkt_type.
 
-mac_type('hmac-sha2-256-etm@openssh.com') ->
+mac_type(hmac-sha2-256-etm@openssh.com) ->
     enc_then_mac;
-mac_type('hmac-sha2-512-etm@openssh.com') ->
+mac_type(hmac-sha2-512-etm@openssh.com) ->
     enc_then_mac;
-mac_type('hmac-sha1-etm@openssh.com') ->
+mac_type(hmac-sha1-etm@openssh.com) ->
     enc_then_mac;
 mac_type(_) ->
     rfc4253.
@@ -1596,7 +1596,7 @@ encrypt_magic(server) ->
 
 encrypt_init(#ssh{encrypt = none} = Ssh) ->
     {ok,Ssh};
-encrypt_init(#ssh{encrypt = 'chacha20-poly1305@openssh.com',role = Role} = Ssh) ->
+encrypt_init(#ssh{encrypt = chacha20-poly1305@openssh.com,role = Role} = Ssh) ->
     {_,KeyMagic} = encrypt_magic(Role),
     <<K2:32/binary,K1:32/binary>> = hash(Ssh,KeyMagic,8 * 64),
     {ok,Ssh#ssh{encrypt_keys = {K1,K2}}};
@@ -1621,7 +1621,7 @@ encrypt_final(Ssh) ->
 
 encrypt(#ssh{encrypt = none} = Ssh,Data) ->
     {Ssh,Data};
-encrypt(#ssh{encrypt = 'chacha20-poly1305@openssh.com',encrypt_keys = {K1,K2},send_sequence = Seq} = Ssh,<<LenData:4/binary,PayloadData/binary>>) ->
+encrypt(#ssh{encrypt = chacha20-poly1305@openssh.com,encrypt_keys = {K1,K2},send_sequence = Seq} = Ssh,<<LenData:4/binary,PayloadData/binary>>) ->
     IV1 = <<0:8/unit:8,Seq:8/unit:8>>,
     EncLen = crypto:crypto_one_time(chacha20,K1,IV1,LenData,true),
     IV2 = <<1:8/little-unit:8,Seq:8/unit:8>>,
@@ -1642,7 +1642,7 @@ encrypt(#ssh{encrypt_ctx = Ctx0} = Ssh,Data) ->
 
 decrypt_init(#ssh{decrypt = none} = Ssh) ->
     {ok,Ssh};
-decrypt_init(#ssh{decrypt = 'chacha20-poly1305@openssh.com',role = Role} = Ssh) ->
+decrypt_init(#ssh{decrypt = chacha20-poly1305@openssh.com,role = Role} = Ssh) ->
     {_,KeyMagic} = decrypt_magic(Role),
     <<K2:32/binary,K1:32/binary>> = hash(Ssh,KeyMagic,8 * 64),
     {ok,Ssh#ssh{decrypt_keys = {K1,K2}}};
@@ -1667,7 +1667,7 @@ decrypt_final(Ssh) ->
 
 decrypt(Ssh,<<>>) ->
     {Ssh,<<>>};
-decrypt(#ssh{decrypt = 'chacha20-poly1305@openssh.com',decrypt_keys = {K1,K2},recv_sequence = Seq} = Ssh,Data) ->
+decrypt(#ssh{decrypt = chacha20-poly1305@openssh.com,decrypt_keys = {K1,K2},recv_sequence = Seq} = Ssh,Data) ->
     case Data of
         {length,EncryptedLen}->
             PacketLenBin = crypto:crypto_one_time(chacha20,K1,<<0:8/unit:8,Seq:8/unit:8>>,EncryptedLen,false),
@@ -1707,7 +1707,7 @@ compress_init(#ssh{compress = zlib} = Ssh,Level) ->
     Zlib = zlib:open(),
     ok = zlib:deflateInit(Zlib,Level),
     {ok,Ssh#ssh{compress_ctx = Zlib}};
-compress_init(#ssh{compress = 'zlib@openssh.com'} = Ssh,Level) ->
+compress_init(#ssh{compress = zlib@openssh.com} = Ssh,Level) ->
     Zlib = zlib:open(),
     ok = zlib:deflateInit(Zlib,Level),
     {ok,Ssh#ssh{compress_ctx = Zlib}}.
@@ -1717,9 +1717,9 @@ compress_final(#ssh{compress = none} = Ssh) ->
 compress_final(#ssh{compress = zlib,compress_ctx = Context} = Ssh) ->
     zlib:close(Context),
     {ok,Ssh#ssh{compress = none,compress_ctx = undefined}};
-compress_final(#ssh{compress = 'zlib@openssh.com',authenticated = false} = Ssh) ->
+compress_final(#ssh{compress = zlib@openssh.com,authenticated = false} = Ssh) ->
     {ok,Ssh};
-compress_final(#ssh{compress = 'zlib@openssh.com',compress_ctx = Context,authenticated = true} = Ssh) ->
+compress_final(#ssh{compress = zlib@openssh.com,compress_ctx = Context,authenticated = true} = Ssh) ->
     zlib:close(Context),
     {ok,Ssh#ssh{compress = none,compress_ctx = undefined}}.
 
@@ -1728,9 +1728,9 @@ compress(#ssh{compress = none} = Ssh,Data) ->
 compress(#ssh{compress = zlib,compress_ctx = Context} = Ssh,Data) ->
     Compressed = zlib:deflate(Context,Data,sync),
     {Ssh,list_to_binary(Compressed)};
-compress(#ssh{compress = 'zlib@openssh.com',authenticated = false} = Ssh,Data) ->
+compress(#ssh{compress = zlib@openssh.com,authenticated = false} = Ssh,Data) ->
     {Ssh,Data};
-compress(#ssh{compress = 'zlib@openssh.com',compress_ctx = Context,authenticated = true} = Ssh,Data) ->
+compress(#ssh{compress = zlib@openssh.com,compress_ctx = Context,authenticated = true} = Ssh,Data) ->
     Compressed = zlib:deflate(Context,Data,sync),
     {Ssh,list_to_binary(Compressed)}.
 
@@ -1740,7 +1740,7 @@ decompress_init(#ssh{decompress = zlib} = Ssh) ->
     Zlib = zlib:open(),
     ok = zlib:inflateInit(Zlib),
     {ok,Ssh#ssh{decompress_ctx = Zlib}};
-decompress_init(#ssh{decompress = 'zlib@openssh.com'} = Ssh) ->
+decompress_init(#ssh{decompress = zlib@openssh.com} = Ssh) ->
     Zlib = zlib:open(),
     ok = zlib:inflateInit(Zlib),
     {ok,Ssh#ssh{decompress_ctx = Zlib}}.
@@ -1750,9 +1750,9 @@ decompress_final(#ssh{decompress = none} = Ssh) ->
 decompress_final(#ssh{decompress = zlib,decompress_ctx = Context} = Ssh) ->
     zlib:close(Context),
     {ok,Ssh#ssh{decompress = none,decompress_ctx = undefined}};
-decompress_final(#ssh{decompress = 'zlib@openssh.com',authenticated = false} = Ssh) ->
+decompress_final(#ssh{decompress = zlib@openssh.com,authenticated = false} = Ssh) ->
     {ok,Ssh};
-decompress_final(#ssh{decompress = 'zlib@openssh.com',decompress_ctx = Context,authenticated = true} = Ssh) ->
+decompress_final(#ssh{decompress = zlib@openssh.com,decompress_ctx = Context,authenticated = true} = Ssh) ->
     zlib:close(Context),
     {ok,Ssh#ssh{decompress = none,decompress_ctx = undefined}}.
 
@@ -1761,9 +1761,9 @@ decompress(#ssh{decompress = none} = Ssh,Data) ->
 decompress(#ssh{decompress = zlib,decompress_ctx = Context} = Ssh,Data) ->
     Decompressed = zlib:inflate(Context,Data),
     {Ssh,list_to_binary(Decompressed)};
-decompress(#ssh{decompress = 'zlib@openssh.com',authenticated = false} = Ssh,Data) ->
+decompress(#ssh{decompress = zlib@openssh.com,authenticated = false} = Ssh,Data) ->
     {Ssh,Data};
-decompress(#ssh{decompress = 'zlib@openssh.com',decompress_ctx = Context,authenticated = true} = Ssh,Data) ->
+decompress(#ssh{decompress = zlib@openssh.com,decompress_ctx = Context,authenticated = true} = Ssh,Data) ->
     Decompressed = zlib:inflate(Context,Data),
     {Ssh,list_to_binary(Decompressed)}.
 
@@ -1807,24 +1807,24 @@ recv_mac_final(SSH) ->
 
 mac(none,_,_,_) ->
     <<>>;
-mac('hmac-sha1',Key,SeqNum,Data) ->
+mac(hmac-sha1,Key,SeqNum,Data) ->
     crypto:mac(hmac,sha,Key,[<<SeqNum:32/unsigned-big-integer>>, Data]);
-mac('hmac-sha1-96',Key,SeqNum,Data) ->
-    crypto:macN(hmac,sha,Key,[<<SeqNum:32/unsigned-big-integer>>, Data],mac_digest_size('hmac-sha1-96'));
-mac('hmac-md5',Key,SeqNum,Data) ->
+mac(hmac-sha1-96,Key,SeqNum,Data) ->
+    crypto:macN(hmac,sha,Key,[<<SeqNum:32/unsigned-big-integer>>, Data],mac_digest_size(hmac-sha1-96));
+mac(hmac-md5,Key,SeqNum,Data) ->
     crypto:mac(hmac,md5,Key,[<<SeqNum:32/unsigned-big-integer>>, Data]);
-mac('hmac-md5-96',Key,SeqNum,Data) ->
-    crypto:macN(hmac,md5,Key,[<<SeqNum:32/unsigned-big-integer>>, Data],mac_digest_size('hmac-md5-96'));
-mac('hmac-sha2-256',Key,SeqNum,Data) ->
+mac(hmac-md5-96,Key,SeqNum,Data) ->
+    crypto:macN(hmac,md5,Key,[<<SeqNum:32/unsigned-big-integer>>, Data],mac_digest_size(hmac-md5-96));
+mac(hmac-sha2-256,Key,SeqNum,Data) ->
     crypto:mac(hmac,sha256,Key,[<<SeqNum:32/unsigned-big-integer>>, Data]);
-mac('hmac-sha2-512',Key,SeqNum,Data) ->
+mac(hmac-sha2-512,Key,SeqNum,Data) ->
     crypto:mac(hmac,sha512,Key,[<<SeqNum:32/unsigned-big-integer>>, Data]);
-mac('hmac-sha1-etm@openssh.com',Key,SeqNum,Data) ->
-    mac('hmac-sha1',Key,SeqNum,Data);
-mac('hmac-sha2-256-etm@openssh.com',Key,SeqNum,Data) ->
-    mac('hmac-sha2-256',Key,SeqNum,Data);
-mac('hmac-sha2-512-etm@openssh.com',Key,SeqNum,Data) ->
-    mac('hmac-sha2-512',Key,SeqNum,Data).
+mac(hmac-sha1-etm@openssh.com,Key,SeqNum,Data) ->
+    mac(hmac-sha1,Key,SeqNum,Data);
+mac(hmac-sha2-256-etm@openssh.com,Key,SeqNum,Data) ->
+    mac(hmac-sha2-256,Key,SeqNum,Data);
+mac(hmac-sha2-512-etm@openssh.com,Key,SeqNum,Data) ->
+    mac(hmac-sha2-512,Key,SeqNum,Data).
 
 hash(_SSH,_Char,0) ->
     <<>>;
@@ -1876,33 +1876,33 @@ kex_alg_dependent({Min,NBits,Max,Prime,Gen,E,F,K}) ->
 
 valid_key_sha_alg(_,#{engine:=_,key_id:=_},_Alg) ->
     true;
-valid_key_sha_alg(public,#'RSAPublicKey'{},'rsa-sha2-512') ->
+valid_key_sha_alg(public,#'RSAPublicKey'{},rsa-sha2-512) ->
     true;
-valid_key_sha_alg(public,#'RSAPublicKey'{},'rsa-sha2-384') ->
+valid_key_sha_alg(public,#'RSAPublicKey'{},rsa-sha2-384) ->
     true;
-valid_key_sha_alg(public,#'RSAPublicKey'{},'rsa-sha2-256') ->
+valid_key_sha_alg(public,#'RSAPublicKey'{},rsa-sha2-256) ->
     true;
-valid_key_sha_alg(public,#'RSAPublicKey'{},'ssh-rsa') ->
+valid_key_sha_alg(public,#'RSAPublicKey'{},ssh-rsa) ->
     true;
-valid_key_sha_alg(private,#'RSAPrivateKey'{},'rsa-sha2-512') ->
+valid_key_sha_alg(private,#'RSAPrivateKey'{},rsa-sha2-512) ->
     true;
-valid_key_sha_alg(private,#'RSAPrivateKey'{},'rsa-sha2-384') ->
+valid_key_sha_alg(private,#'RSAPrivateKey'{},rsa-sha2-384) ->
     true;
-valid_key_sha_alg(private,#'RSAPrivateKey'{},'rsa-sha2-256') ->
+valid_key_sha_alg(private,#'RSAPrivateKey'{},rsa-sha2-256) ->
     true;
-valid_key_sha_alg(private,#'RSAPrivateKey'{},'ssh-rsa') ->
+valid_key_sha_alg(private,#'RSAPrivateKey'{},ssh-rsa) ->
     true;
-valid_key_sha_alg(public,{_,#'Dss-Parms'{}},'ssh-dss') ->
+valid_key_sha_alg(public,{_,#'Dss-Parms'{}},ssh-dss) ->
     true;
-valid_key_sha_alg(private,#'DSAPrivateKey'{},'ssh-dss') ->
+valid_key_sha_alg(private,#'DSAPrivateKey'{},ssh-dss) ->
     true;
-valid_key_sha_alg(public,{ed_pub,ed25519,_},'ssh-ed25519') ->
+valid_key_sha_alg(public,{ed_pub,ed25519,_},ssh-ed25519) ->
     true;
-valid_key_sha_alg(private,{ed_pri,ed25519,_,_},'ssh-ed25519') ->
+valid_key_sha_alg(private,{ed_pri,ed25519,_,_},ssh-ed25519) ->
     true;
-valid_key_sha_alg(public,{ed_pub,ed448,_},'ssh-ed448') ->
+valid_key_sha_alg(public,{ed_pub,ed448,_},ssh-ed448) ->
     true;
-valid_key_sha_alg(private,{ed_pri,ed448,_,_},'ssh-ed448') ->
+valid_key_sha_alg(private,{ed_pri,ed448,_,_},ssh-ed448) ->
     true;
 valid_key_sha_alg(public,{#'ECPoint'{},{namedCurve,OID}},Alg)
     when is_tuple(OID)->
@@ -1923,13 +1923,13 @@ valid_key_sha_alg_ec(OID,Alg) ->
 -dialyzer({no_match,{public_algo,1}}).
 
 public_algo(#'RSAPublicKey'{}) ->
-    'ssh-rsa';
+    ssh-rsa;
 public_algo({_,#'Dss-Parms'{}}) ->
-    'ssh-dss';
+    ssh-dss;
 public_algo({ed_pub,ed25519,_}) ->
-    'ssh-ed25519';
+    ssh-ed25519;
 public_algo({ed_pub,ed448,_}) ->
-    'ssh-ed448';
+    ssh-ed448;
 public_algo({#'ECPoint'{},{namedCurve,OID}})
     when is_tuple(OID)->
     SshName = public_key:oid2ssh_curvename(OID),
@@ -1938,25 +1938,25 @@ public_algo({#'ECPoint'{},{namedCurve,OID}})
             _:_->
                 undefined end.
 
-sha('ssh-rsa') ->
+sha(ssh-rsa) ->
     sha;
-sha('rsa-sha2-256') ->
+sha(rsa-sha2-256) ->
     sha256;
-sha('rsa-sha2-384') ->
+sha(rsa-sha2-384) ->
     sha384;
-sha('rsa-sha2-512') ->
+sha(rsa-sha2-512) ->
     sha512;
-sha('ssh-dss') ->
+sha(ssh-dss) ->
     sha;
-sha('ecdsa-sha2-nistp256') ->
+sha(ecdsa-sha2-nistp256) ->
     sha(secp256r1);
-sha('ecdsa-sha2-nistp384') ->
+sha(ecdsa-sha2-nistp384) ->
     sha(secp384r1);
-sha('ecdsa-sha2-nistp521') ->
+sha(ecdsa-sha2-nistp521) ->
     sha(secp521r1);
-sha('ssh-ed25519') ->
+sha(ssh-ed25519) ->
     undefined;
-sha('ssh-ed448') ->
+sha(ssh-ed448) ->
     undefined;
 sha(secp256r1) ->
     sha256;
@@ -1964,19 +1964,19 @@ sha(secp384r1) ->
     sha384;
 sha(secp521r1) ->
     sha512;
-sha('diffie-hellman-group1-sha1') ->
+sha(diffie-hellman-group1-sha1) ->
     sha;
-sha('diffie-hellman-group14-sha1') ->
+sha(diffie-hellman-group14-sha1) ->
     sha;
-sha('diffie-hellman-group14-sha256') ->
+sha(diffie-hellman-group14-sha256) ->
     sha256;
-sha('diffie-hellman-group16-sha512') ->
+sha(diffie-hellman-group16-sha512) ->
     sha512;
-sha('diffie-hellman-group18-sha512') ->
+sha(diffie-hellman-group18-sha512) ->
     sha512;
-sha('diffie-hellman-group-exchange-sha1') ->
+sha(diffie-hellman-group-exchange-sha1) ->
     sha;
-sha('diffie-hellman-group-exchange-sha256') ->
+sha(diffie-hellman-group-exchange-sha256) ->
     sha256;
 sha({1,2,840,10045,3,1,7}) ->
     sha(secp256r1);
@@ -1984,17 +1984,17 @@ sha({1,3,132,0,34}) ->
     sha(secp384r1);
 sha({1,3,132,0,35}) ->
     sha(secp521r1);
-sha('ecdh-sha2-nistp256') ->
+sha(ecdh-sha2-nistp256) ->
     sha(secp256r1);
-sha('ecdh-sha2-nistp384') ->
+sha(ecdh-sha2-nistp384) ->
     sha(secp384r1);
-sha('ecdh-sha2-nistp521') ->
+sha(ecdh-sha2-nistp521) ->
     sha(secp521r1);
-sha('curve25519-sha256') ->
+sha(curve25519-sha256) ->
     sha256;
-sha('curve25519-sha256@libssh.org') ->
+sha(curve25519-sha256@libssh.org) ->
     sha256;
-sha('curve448-sha512') ->
+sha(curve448-sha512) ->
     sha512;
 sha(x25519) ->
     sha256;
@@ -2005,69 +2005,69 @@ sha(Str)
     length(Str) < 50->
     sha(list_to_existing_atom(Str)).
 
-mac_key_bytes('hmac-sha1') ->
+mac_key_bytes(hmac-sha1) ->
     20;
-mac_key_bytes('hmac-sha1-etm@openssh.com') ->
+mac_key_bytes(hmac-sha1-etm@openssh.com) ->
     20;
-mac_key_bytes('hmac-sha1-96') ->
+mac_key_bytes(hmac-sha1-96) ->
     20;
-mac_key_bytes('hmac-md5') ->
+mac_key_bytes(hmac-md5) ->
     16;
-mac_key_bytes('hmac-md5-96') ->
+mac_key_bytes(hmac-md5-96) ->
     16;
-mac_key_bytes('hmac-sha2-256') ->
+mac_key_bytes(hmac-sha2-256) ->
     32;
-mac_key_bytes('hmac-sha2-256-etm@openssh.com') ->
+mac_key_bytes(hmac-sha2-256-etm@openssh.com) ->
     32;
-mac_key_bytes('hmac-sha2-512') ->
+mac_key_bytes(hmac-sha2-512) ->
     64;
-mac_key_bytes('hmac-sha2-512-etm@openssh.com') ->
+mac_key_bytes(hmac-sha2-512-etm@openssh.com) ->
     64;
 mac_key_bytes('AEAD_AES_128_GCM') ->
     0;
 mac_key_bytes('AEAD_AES_256_GCM') ->
     0;
-mac_key_bytes('chacha20-poly1305@openssh.com') ->
+mac_key_bytes(chacha20-poly1305@openssh.com) ->
     0;
 mac_key_bytes(none) ->
     0.
 
-mac_digest_size('hmac-sha1') ->
+mac_digest_size(hmac-sha1) ->
     20;
-mac_digest_size('hmac-sha1-etm@openssh.com') ->
+mac_digest_size(hmac-sha1-etm@openssh.com) ->
     20;
-mac_digest_size('hmac-sha1-96') ->
+mac_digest_size(hmac-sha1-96) ->
     12;
-mac_digest_size('hmac-md5') ->
+mac_digest_size(hmac-md5) ->
     20;
-mac_digest_size('hmac-md5-96') ->
+mac_digest_size(hmac-md5-96) ->
     12;
-mac_digest_size('hmac-sha2-256') ->
+mac_digest_size(hmac-sha2-256) ->
     32;
-mac_digest_size('hmac-sha2-256-etm@openssh.com') ->
+mac_digest_size(hmac-sha2-256-etm@openssh.com) ->
     32;
-mac_digest_size('hmac-sha2-512') ->
+mac_digest_size(hmac-sha2-512) ->
     64;
-mac_digest_size('hmac-sha2-512-etm@openssh.com') ->
+mac_digest_size(hmac-sha2-512-etm@openssh.com) ->
     64;
 mac_digest_size('AEAD_AES_128_GCM') ->
     16;
 mac_digest_size('AEAD_AES_256_GCM') ->
     16;
-mac_digest_size('chacha20-poly1305@openssh.com') ->
+mac_digest_size(chacha20-poly1305@openssh.com) ->
     16;
 mac_digest_size(none) ->
     0.
 
-dh_group('diffie-hellman-group1-sha1') ->
+dh_group(diffie-hellman-group1-sha1) ->
     {2,179769313486231590770839156793787453197860296048756011706444423684197180216158519368947833795864925541502180565485980503646440548199239100050792877003355816639229553136239076508735759914822574862575007425302077447712589550957937778424442426617334727629299387668709205606050270810842907692932019128194467627007};
-dh_group('diffie-hellman-group14-sha1') ->
+dh_group(diffie-hellman-group14-sha1) ->
     {2,32317006071311007300338913926423828248817941241140239112842009751400741706634354222619689417363569347117901737909704191754605873209195028853758986185622153212175412514901774520270235796078236248884246189477587641105928646099411723245426622522193230540919037680524235519125679715870117001058055877651038861847280257976054903569732561526167081339361799541336476559160368317896729073178384589680639671900977202194168647225871031411336429319536193471636533209717077448227988588565369208645296636077250268955505928362751121174096972998068410554359584866583291642136218231078990999448652468262416972035911852507045361090559};
-dh_group('diffie-hellman-group14-sha256') ->
+dh_group(diffie-hellman-group14-sha256) ->
     {2,32317006071311007300338913926423828248817941241140239112842009751400741706634354222619689417363569347117901737909704191754605873209195028853758986185622153212175412514901774520270235796078236248884246189477587641105928646099411723245426622522193230540919037680524235519125679715870117001058055877651038861847280257976054903569732561526167081339361799541336476559160368317896729073178384589680639671900977202194168647225871031411336429319536193471636533209717077448227988588565369208645296636077250268955505928362751121174096972998068410554359584866583291642136218231078990999448652468262416972035911852507045361090559};
-dh_group('diffie-hellman-group16-sha512') ->
+dh_group(diffie-hellman-group16-sha512) ->
     {2,1044388881413152506679602719846529545831269060992135009022588756444338172022322690710444046669809783930111585737890362691860127079270495454517218673016928427459146001866885779762982229321192368303346235204368051010309155674155697460347176946394076535157284994895284821633700921811716738972451834979455897010306333468590751358365138782250372269117968985194322444535687415522007151638638141456178420621277822674995027990278673458629544391736919766299005511505446177668154446234882665961680796576903199116089347634947187778906528008004756692571666922964122566174582776707332452371001272163776841229318324903125740713574141005124561965913888899753461735347970011693256316751660678950830027510255804846105583465055446615090444309583050775808509297040039680057435342253926566240898195863631588888936364129920059308455669454034010391478238784189888594672336242763795138176353222845524644040094258962433613354036104643881925238489224010194193088911666165584229424668165441688927790460608264864204237717002054744337988941974661214699689706521543006262604535890998125752275942608772174376107314217749233048217904944409836238235772306749874396760463376480215133461333478395682746608242585133953883882226786118030184028136755970045385534758453247};
-dh_group('diffie-hellman-group18-sha512') ->
+dh_group(diffie-hellman-group18-sha512) ->
     {2,1090748135619415929450294929359784500348155124953172211774101106966150168922785639028532473848836817769712164169076432969224698752674677662739994265785437233596157045970922338040698100507861033047312331823982435279475700199860971612732540528796554502867919746776983759391475987142521315878719577519148811830879919426939958487087540965716419167467499326156226529675209172277001377591248147563782880558861083327174154014975134893125116015776318890295960698011614157721282527539468816519319333337503114777192360412281721018955834377615480468479252748867320362385355596601795122806756217713579819870634321561907813255153703950795271232652404894983869492174481652303803498881366210508647263668376514131031102336837488999775744046733651827239395353540348414872854639719294694323450186884189822544540647226987292160693184734654941906936646576130260972193280317171696418971553954161446191759093719524951116705577362073481319296041201283516154269044389257727700289684119460283480452306204130024913879981135908026983868205969318167819680850998649694416907952712904962404937775789698917207356355227455066183815847669135530549755439819480321732925869069136146085326382334628745456398071603058051634209386708703306545903199608523824513729625136659128221100967735450519952404248198262813831097374261650380017277916975324134846574681307337017380830353680623216336949471306191686438249305686413380231046096450953594089375540285037292470929395114028305547452584962074309438151825437902976012891749355198678420603722034900311364893046495761404333938686140037848030916292543273684533640032637639100774502371542479302473698388692892420946478947733800387782741417786484770190108867879778991633218628640533982619322466154883011452291890252336487236086654396093853898628805813177559162076363154436494477507871294119841637867701722166609831201845484078070518041336869808398454625586921201308185638888082699408686536045192649569198110353659943111802300636106509865023943661829436426563007917282050894429388841748885398290707743052973605359277515749619730823773215894755121761467887865327707115573804264519206349215850195195364813387526811742474131549802130246506341207020335797706780705406945275438806265978516209706795702579244075380490231741030862614968783306207869687868108423639971983209077624758080499988275591392787267627182442892809646874228263172435642368588260139161962836121481966092745325488641054238839295138992979335446110090325230955276870524611359124918392740353154294858383359}.
 
 parallell_gen_key(Ssh = #ssh{keyex_key = {x,{G,P}},algorithms = Algs}) ->
@@ -2089,17 +2089,17 @@ dh_bits(#alg{encrypt = Encrypt,send_mac = SendMac}) ->
     C = cipher(Encrypt),
     8 * lists:max([C#cipher.key_bytes, C#cipher.block_bytes, C#cipher.iv_bytes, mac_key_bytes(SendMac)]).
 
-ecdh_curve('ecdh-sha2-nistp256') ->
+ecdh_curve(ecdh-sha2-nistp256) ->
     secp256r1;
-ecdh_curve('ecdh-sha2-nistp384') ->
+ecdh_curve(ecdh-sha2-nistp384) ->
     secp384r1;
-ecdh_curve('ecdh-sha2-nistp521') ->
+ecdh_curve(ecdh-sha2-nistp521) ->
     secp521r1;
-ecdh_curve('curve448-sha512') ->
+ecdh_curve(curve448-sha512) ->
     x448;
-ecdh_curve('curve25519-sha256') ->
+ecdh_curve(curve25519-sha256) ->
     x25519;
-ecdh_curve('curve25519-sha256@libssh.org') ->
+ecdh_curve(curve25519-sha256@libssh.org) ->
     x25519.
 
 supported_algorithms(Key,[{client2server,BL1}, {server2client,BL2}]) ->

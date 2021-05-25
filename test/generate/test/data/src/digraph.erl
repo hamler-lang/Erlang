@@ -153,7 +153,7 @@ no_vertices(G) ->
 -spec(vertices(G) -> Vertices when G::graph(),Vertices::[vertex()]).
 
 vertices(G) ->
-    ets:select(G#digraph.vtab,[{{'$1','_'},[],['$1']}]).
+    ets:select(G#digraph.vtab,[{{'$1',_},[],['$1']}]).
 
 -spec(source_vertices(graph()) -> [vertex()]).
 
@@ -232,7 +232,7 @@ no_edges(G) ->
 -spec(edges(G) -> Edges when G::graph(),Edges::[edge()]).
 
 edges(G) ->
-    ets:select(G#digraph.etab,[{{'$1','_','_','_'},[],['$1']}]).
+    ets:select(G#digraph.etab,[{{'$1',_,_,_},[],['$1']}]).
 
 -spec(edges(G,V) -> Edges when G::graph(),V::vertex(),Edges::[edge()]).
 

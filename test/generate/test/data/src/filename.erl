@@ -2,7 +2,7 @@
 
 -module(filename).
 
--deprecated([{find_src,'_',"use filelib:find_source/1,3 instead"}]).
+-deprecated([{find_src,_,"use filelib:find_source/1,3 instead"}]).
 
 -deprecated([{safe_relative_path,1,"use filelib:safe_relative_path/2 instead"}]).
 

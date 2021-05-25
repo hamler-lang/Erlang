@@ -18,7 +18,7 @@ file(File0) ->
     end.
 
 process(Stream,Lno,R) ->
-    process(io:get_line(Stream,''),Stream,Lno,R).
+    process(io:get_line(Stream,),Stream,Lno,R).
 
 process(eof,Stream,Lno,Acc) ->
     ok = file:close(Stream),
@@ -196,7 +196,7 @@ skip_comment([_| T]) ->
     skip_comment(T).
 
 skip_multiline_comment(Stream,[],Lno,Level) ->
-    case io:get_line(Stream,'') of
+    case io:get_line(Stream,) of
         eof->
             throw({error,eof_in_comment});
         Line->

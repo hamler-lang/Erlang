@@ -706,7 +706,7 @@ unknown_warnings(State = #cl_state{legal_warnings = LegalWarnings}) ->
         false->
             []
     end,
-    WarningInfo = {_Filename = "",_Line = 0,_MorMFA = ''},
+    WarningInfo = {_Filename = "",_Line = 0,_MorMFA = },
     [{warn_unknown,WarningInfo,W} || W <- Unknown].
 
 unknown_functions(#cl_state{external_calls = Calls}) ->

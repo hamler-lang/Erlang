@@ -213,7 +213,7 @@ get_command(Prompt,Eval,Bs,RT,Ds) ->
                 Opts = io:getopts(),
                 TmpOpts = lists:keyreplace(echo,1,Opts,{echo,false}),
                 _ = io:setopts(TmpOpts),
-                _ = io:get_line(''),
+                _ = io:get_line(),
                 _ = io:setopts(Opts),
                 {error,ErrorInfo};
             Else->
@@ -874,7 +874,7 @@ local_func(rf,[],Bs,_Shell,RT,_Lf,_Ef) ->
     {value,initiate_records(Bs,RT),Bs};
 local_func(rf,[A],Bs0,_Shell,RT,Lf,Ef) ->
     {[Recs],Bs} = expr_list([A],Bs0,Lf,Ef),
-    if '_' =:= Recs ->
+    if _ =:= Recs ->
         true = ets:delete_all_objects(RT);true ->
         lists:foreach(fun (Name)->
             true = ets:delete(RT,Name) end,listify(Recs)) end,
@@ -891,7 +891,7 @@ local_func(rp,[A],Bs0,_Shell,RT,Lf,Ef) ->
     {value,ok,Bs};
 local_func(rr,[A],Bs0,_Shell,RT,Lf,Ef) ->
     {[File],Bs} = expr_list([A],Bs0,Lf,Ef),
-    {value,read_and_add_records(File,'_',[],Bs,RT),Bs};
+    {value,read_and_add_records(File,_,[],Bs,RT),Bs};
 local_func(rr,[_, _] = As0,Bs0,_Shell,RT,Lf,Ef) ->
     {[File, Sel],Bs} = expr_list(As0,Bs0,Lf,Ef),
     {value,read_and_add_records(File,Sel,[],Bs,RT),Bs};
@@ -1011,7 +1011,7 @@ read_records(File,Selected,Options) ->
             when is_tuple(Error)->
             Error;
         RAs
-            when Selected =:= '_'->
+            when Selected =:= _->
             RAs;
         RAs->
             Sel = listify(Selected),

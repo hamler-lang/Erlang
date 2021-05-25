@@ -18,15 +18,15 @@
 
 -record(xref, {version = 1,mode = functions,variables = not_set_up,modules = dict:new(),applications = dict:new(),releases = dict:new(),library_path = [],libraries = dict:new(),builtins_default = false,recurse_default = false,verbose_default = false,warnings_default = true}).
 
--record(xref_mod, {name = '',app_name = [],dir = "",mtime,builtins,info,no_unresolved = 0,data}).
+-record(xref_mod, {name = ,app_name = [],dir = "",mtime,builtins,info,no_unresolved = 0,data}).
 
--record(xref_app, {name = '',rel_name = [],vsn = [],dir = ""}).
+-record(xref_app, {name = ,rel_name = [],vsn = [],dir = ""}).
 
--record(xref_rel, {name = '',dir = ""}).
+-record(xref_rel, {name = ,dir = ""}).
 
--record(xref_lib, {name = '',dir = ""}).
+-record(xref_lib, {name = ,dir = ""}).
 
--record(xref_var, {name = '',value,vtype,otype,type}).
+-record(xref_var, {name = ,value,vtype,otype,type}).
 
 -file("xref_base.erl", 64).
 
@@ -792,13 +792,13 @@ depr_cat({F,A,Flg},M,X) ->
 depr_cat({F,A},M,X) ->
     depr_fa(F,A,X,M,4);
 depr_cat(module,M,X) ->
-    depr_fa('_','_',X,M,4);
+    depr_fa(_,_,X,M,4);
 depr_cat(_D,_M,_X) ->
     undefined.
 
-depr_fa('_','_',X,_M,I) ->
+depr_fa(_,_,X,_M,I) ->
     {I,X};
-depr_fa(F,'_',X,_M,I)
+depr_fa(F,_,X,_M,I)
     when is_atom(F)->
     {I,filter(fun ({_,F1,_})->
         F1 =:= F end,X)};

@@ -6,15 +6,15 @@
 
 -record(xref, {version = 1,mode = functions,variables = not_set_up,modules = dict:new(),applications = dict:new(),releases = dict:new(),library_path = [],libraries = dict:new(),builtins_default = false,recurse_default = false,verbose_default = false,warnings_default = true}).
 
--record(xref_mod, {name = '',app_name = [],dir = "",mtime,builtins,info,no_unresolved = 0,data}).
+-record(xref_mod, {name = ,app_name = [],dir = "",mtime,builtins,info,no_unresolved = 0,data}).
 
--record(xref_app, {name = '',rel_name = [],vsn = [],dir = ""}).
+-record(xref_app, {name = ,rel_name = [],vsn = [],dir = ""}).
 
--record(xref_rel, {name = '',dir = ""}).
+-record(xref_rel, {name = ,dir = ""}).
 
--record(xref_lib, {name = '',dir = ""}).
+-record(xref_lib, {name = ,dir = ""}).
 
--record(xref_var, {name = '',value,vtype,otype,type}).
+-record(xref_var, {name = ,value,vtype,otype,type}).
 
 -file("xref_compiler.erl", 24).
 
@@ -105,7 +105,7 @@ statements([Expr],Table,L,UV) ->
         {_Type,edge_closure}->
             E2 = {fun graph_access/2,E1,E1},
             {fun (_E)->
-                'closure()' end,E2};
+                closure() end,E2};
         _Else->
             E1
     end,

@@ -426,7 +426,7 @@ guess_type(Line) ->
     end.
 
 get_line(P) ->
-    case io:get_line(P,'') of
+    case io:get_line(P,) of
         eof->
             fatal("Premature end of file reached");
         Line->
@@ -482,7 +482,7 @@ parse_source(S,File,Fd,StartLine,HeaderSz,CheckOnly) ->
     {PreDefMacros,Module} = pre_def_macros(File),
     IncludePath = [],
     {ok,_} = file:position(Fd,0),
-    _ = io:get_line(Fd,''),
+    _ = io:get_line(Fd,),
     Encoding = epp:set_encoding(Fd),
     {ok,_} = file:position(Fd,HeaderSz),
     case epp:open(File,Fd,StartLine,IncludePath,PreDefMacros) of

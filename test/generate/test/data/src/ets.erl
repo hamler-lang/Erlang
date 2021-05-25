@@ -210,7 +210,7 @@ select_count(_,_) ->
 
 -spec(select_delete(Tab,MatchSpec) -> NumDeleted when Tab::tab(),MatchSpec::match_spec(),NumDeleted::non_neg_integer()).
 
-select_delete(Tab,[{'_',[],[true]}]) ->
+select_delete(Tab,[{_,[],[true]}]) ->
     ets:internal_delete_all(Tab,undefined);
 select_delete(Tab,MatchSpec) ->
     ets:internal_select_delete(Tab,MatchSpec).
@@ -436,7 +436,7 @@ match_delete(Table,Pattern) ->
 -spec(tab2list(Tab) -> [Object] when Tab::tab(),Object::tuple()).
 
 tab2list(T) ->
-    ets:match_object(T,'_').
+    ets:match_object(T,_).
 
 -spec(filter(tab(),function(),[term()]) -> [term()]).
 
@@ -511,7 +511,7 @@ tab2file(Tab,File,Options) ->
     end,
     ets:safe_fixtable(Tab,true),
     {NewState1,Num} = try NewState = LogFun(InitState,Info),
-    dump_file(ets:select(Tab,[{'_',[],['$_']}],100),LogFun,NewState,0)
+    dump_file(ets:select(Tab,[{_,[],['$_']}],100),LogFun,NewState,0)
         after  catch ets:safe_fixtable(Tab,false) end,
     EndInfo = case FtOptions#filetab_options.object_count of
         true->

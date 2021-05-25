@@ -79,9 +79,10 @@ $escapechar = [b d e f n r s t v \" \' \\ ]
 --             '(' ')' ','    '->' '{' '}' '[' ']'      '|' '||'    '<-'   ';'  ':'  '#' '.'
 @separators = \( | \) | \, | \-\> | \{ | \} | \[ | \] | \| | \|\| | \<\- | \; | \: | \# | \. 
 
-$namechar1 = [$lowercase $digit \@ \_ ]
+-- $namechar1 = [$lowercase $digit \@ \_ ]
+$namechar1 = [$lowercase ]
 
-@namechars = $namechar1 $namechar*
+@namechars = $namechar1 $namechar* | \_
 
 
 
@@ -103,7 +104,7 @@ tokens :-
   $sign? $digit+ \. $digit+ ((E|e) $sign? $digit+)? { \s -> TFloat (read $ dropPlus s)}
 
   --’ ((inputchar except control and \ and ’ ) | escape)* ’
-  \'(($inputchar # [$control \\ \'])|@escape)*\'    { \s -> TAtom $ readEscape s}
+  \'(($inputchar # [$control \\ \'])|@escape)*\'    { \s -> TAtom $ tail $ init $ readEscape s}
 
   @namechars                                        { \s -> mkAtom s}
 
@@ -111,7 +112,7 @@ tokens :-
   \$(($inputchar # [$control $space \\])|@escape)   { \s -> TChar $ escapeToChar $ drop 1 s}
 
   --" ((inputchar except control and \ and " ) | escape)* "
-  \"(($inputchar # [$control \\ \"])|@escape)*\"    { \s -> TString $ readEscape s}
+  \"(($inputchar # [$control \\ \"])|@escape)*\"    { \s -> TString $ tail $ init $ readEscape s}
 
 
   @separators                                       { \s -> TSeparators s}

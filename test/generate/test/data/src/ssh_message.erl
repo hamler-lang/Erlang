@@ -114,7 +114,7 @@
 
 -record('EDIPartyName', {nameAssigner = asn1_NOVALUE,partyName}).
 
--record('AnotherName', {'type-id',value}).
+-record('AnotherName', {type-id,value}).
 
 -record('PolicyMappings_SEQOF', {issuerDomainPolicy,subjectDomainPolicy}).
 
@@ -212,23 +212,23 @@
 
 -record('PresentationAddress', {pSelector = asn1_NOVALUE,sSelector = asn1_NOVALUE,tSelector = asn1_NOVALUE,nAddresses}).
 
--record('ExtendedNetworkAddress_e163-4-address', {number,'sub-address' = asn1_NOVALUE}).
+-record('ExtendedNetworkAddress_e163-4-address', {number,sub-address = asn1_NOVALUE}).
 
--record('PDSParameter', {'printable-string' = asn1_NOVALUE,'teletex-string' = asn1_NOVALUE}).
+-record('PDSParameter', {printable-string = asn1_NOVALUE,teletex-string = asn1_NOVALUE}).
 
--record('UnformattedPostalAddress', {'printable-address' = asn1_NOVALUE,'teletex-string' = asn1_NOVALUE}).
+-record('UnformattedPostalAddress', {printable-address = asn1_NOVALUE,teletex-string = asn1_NOVALUE}).
 
--record('TeletexPersonalName', {surname,'given-name' = asn1_NOVALUE,initials = asn1_NOVALUE,'generation-qualifier' = asn1_NOVALUE}).
+-record('TeletexPersonalName', {surname,given-name = asn1_NOVALUE,initials = asn1_NOVALUE,generation-qualifier = asn1_NOVALUE}).
 
--record('ExtensionAttribute', {'extension-attribute-type','extension-attribute-value'}).
+-record('ExtensionAttribute', {extension-attribute-type,extension-attribute-value}).
 
 -record('BuiltInDomainDefinedAttribute', {type,value}).
 
--record('PersonalName', {surname,'given-name' = asn1_NOVALUE,initials = asn1_NOVALUE,'generation-qualifier' = asn1_NOVALUE}).
+-record('PersonalName', {surname,given-name = asn1_NOVALUE,initials = asn1_NOVALUE,generation-qualifier = asn1_NOVALUE}).
 
--record('BuiltInStandardAttributes', {'country-name' = asn1_NOVALUE,'administration-domain-name' = asn1_NOVALUE,'network-address' = asn1_NOVALUE,'terminal-identifier' = asn1_NOVALUE,'private-domain-name' = asn1_NOVALUE,'organization-name' = asn1_NOVALUE,'numeric-user-identifier' = asn1_NOVALUE,'personal-name' = asn1_NOVALUE,'organizational-unit-names' = asn1_NOVALUE}).
+-record('BuiltInStandardAttributes', {country-name = asn1_NOVALUE,administration-domain-name = asn1_NOVALUE,network-address = asn1_NOVALUE,terminal-identifier = asn1_NOVALUE,private-domain-name = asn1_NOVALUE,organization-name = asn1_NOVALUE,numeric-user-identifier = asn1_NOVALUE,personal-name = asn1_NOVALUE,organizational-unit-names = asn1_NOVALUE}).
 
--record('ORAddress', {'built-in-standard-attributes','built-in-domain-defined-attributes' = asn1_NOVALUE,'extension-attributes' = asn1_NOVALUE}).
+-record('ORAddress', {built-in-standard-attributes,built-in-domain-defined-attributes = asn1_NOVALUE,extension-attributes = asn1_NOVALUE}).
 
 -record('AlgorithmIdentifier', {algorithm,parameters = asn1_NOVALUE}).
 
@@ -360,15 +360,15 @@
 
 -type(alg_entry()::{kex,[kex_alg()]}|{public_key,[pubkey_alg()]}|{cipher,double_algs(cipher_alg())}|{mac,double_algs(mac_alg())}|{compression,double_algs(compression_alg())}).
 
--type(kex_alg()::'diffie-hellman-group-exchange-sha1'|'diffie-hellman-group-exchange-sha256'|'diffie-hellman-group1-sha1'|'diffie-hellman-group14-sha1'|'diffie-hellman-group14-sha256'|'diffie-hellman-group16-sha512'|'diffie-hellman-group18-sha512'|'curve25519-sha256'|'curve25519-sha256@libssh.org'|'curve448-sha512'|'ecdh-sha2-nistp256'|'ecdh-sha2-nistp384'|'ecdh-sha2-nistp521').
+-type(kex_alg()::diffie-hellman-group-exchange-sha1|diffie-hellman-group-exchange-sha256|diffie-hellman-group1-sha1|diffie-hellman-group14-sha1|diffie-hellman-group14-sha256|diffie-hellman-group16-sha512|diffie-hellman-group18-sha512|curve25519-sha256|curve25519-sha256@libssh.org|curve448-sha512|ecdh-sha2-nistp256|ecdh-sha2-nistp384|ecdh-sha2-nistp521).
 
--type(pubkey_alg()::'ecdsa-sha2-nistp256'|'ecdsa-sha2-nistp384'|'ecdsa-sha2-nistp521'|'ssh-ed25519'|'ssh-ed448'|'rsa-sha2-256'|'rsa-sha2-512'|'ssh-dss'|'ssh-rsa').
+-type(pubkey_alg()::ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521|ssh-ed25519|ssh-ed448|rsa-sha2-256|rsa-sha2-512|ssh-dss|ssh-rsa).
 
--type(cipher_alg()::'3des-cbc'|'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|'aes128-cbc'|'aes128-ctr'|'aes128-gcm@openssh.com'|'aes192-ctr'|'aes192-cbc'|'aes256-cbc'|'aes256-ctr'|'aes256-gcm@openssh.com'|'chacha20-poly1305@openssh.com').
+-type(cipher_alg()::'3des-cbc'|'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|aes128-cbc|aes128-ctr|aes128-gcm@openssh.com|aes192-ctr|aes192-cbc|aes256-cbc|aes256-ctr|aes256-gcm@openssh.com|chacha20-poly1305@openssh.com).
 
--type(mac_alg()::'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|'hmac-sha1'|'hmac-sha1-etm@openssh.com'|'hmac-sha1-96'|'hmac-sha2-256'|'hmac-sha2-512'|'hmac-sha2-256-etm@openssh.com'|'hmac-sha2-512-etm@openssh.com').
+-type(mac_alg()::'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|hmac-sha1|hmac-sha1-etm@openssh.com|hmac-sha1-96|hmac-sha2-256|hmac-sha2-512|hmac-sha2-256-etm@openssh.com|hmac-sha2-512-etm@openssh.com).
 
--type(compression_alg()::none|zlib|'zlib@openssh.com').
+-type(compression_alg()::none|zlib|zlib@openssh.com).
 
 -type(double_algs(AlgType)::[{client2server,[AlgType]}|{server2client,[AlgType]}]|[AlgType]).
 
@@ -452,23 +452,23 @@
 
 -type(shell_spec()::mod_fun_args()|shell_fun()|disabled).
 
--type(shell_fun()::'shell_fun/1'()|'shell_fun/2'()).
+-type(shell_fun()::shell_fun/1()|shell_fun/2()).
 
--type('shell_fun/1'()::fun((User::string()) -> pid())).
+-type(shell_fun/1()::fun((User::string()) -> pid())).
 
--type('shell_fun/2'()::fun((User::string(),PeerAddr::inet:ip_address()) -> pid())).
+-type(shell_fun/2()::fun((User::string(),PeerAddr::inet:ip_address()) -> pid())).
 
 -type(exec_daemon_option()::{exec,exec_spec()}).
 
 -type(exec_spec()::{direct,exec_fun()}|disabled|deprecated_exec_opt()).
 
--type(exec_fun()::'exec_fun/1'()|'exec_fun/2'()|'exec_fun/3'()).
+-type(exec_fun()::exec_fun/1()|exec_fun/2()|exec_fun/3()).
 
--type('exec_fun/1'()::fun((Cmd::string()) -> exec_result())).
+-type(exec_fun/1()::fun((Cmd::string()) -> exec_result())).
 
--type('exec_fun/2'()::fun((Cmd::string(),User::string()) -> exec_result())).
+-type(exec_fun/2()::fun((Cmd::string(),User::string()) -> exec_result())).
 
--type('exec_fun/3'()::fun((Cmd::string(),User::string(),ClientAddr::ip_port()) -> exec_result())).
+-type(exec_fun/3()::fun((Cmd::string(),User::string(),ClientAddr::ip_port()) -> exec_result())).
 
 -type(exec_result()::{ok,Result::term()}|{error,Reason::term()}).
 
@@ -1066,7 +1066,7 @@ ssh2_pubkey_decode2(<<9:32/unsigned-big-integer,"ssh-ed448",_L:32/unsigned-big-i
     {{ed_pub,ed448,Key},Rest}.
 
 ssh2_privkey_decode2(<<7:32/unsigned-big-integer,"ssh-rsa",_NL:32/unsigned-big-integer,N:_NL/big-signed-integer-unit:8,_EL:32/unsigned-big-integer,E:_EL/big-signed-integer-unit:8,_DL:32/unsigned-big-integer,D:_DL/big-signed-integer-unit:8,_IQMPL:32/unsigned-big-integer,IQMP:_IQMPL/big-signed-integer-unit:8,_PL:32/unsigned-big-integer,P:_PL/big-signed-integer-unit:8,_QL:32/unsigned-big-integer,Q:_QL/big-signed-integer-unit:8,Rest/binary>>) ->
-    {#'RSAPrivateKey'{version = 'two-prime',modulus = N,publicExponent = E,privateExponent = D,prime1 = P,prime2 = Q,coefficient = IQMP},Rest};
+    {#'RSAPrivateKey'{version = two-prime,modulus = N,publicExponent = E,privateExponent = D,prime1 = P,prime2 = Q,coefficient = IQMP},Rest};
 ssh2_privkey_decode2(<<7:32/unsigned-big-integer,"ssh-dss",_PL:32/unsigned-big-integer,P:_PL/big-signed-integer-unit:8,_QL:32/unsigned-big-integer,Q:_QL/big-signed-integer-unit:8,_GL:32/unsigned-big-integer,G:_GL/big-signed-integer-unit:8,_YL:32/unsigned-big-integer,Y:_YL/big-signed-integer-unit:8,_XL:32/unsigned-big-integer,X:_XL/big-signed-integer-unit:8,Rest/binary>>) ->
     {#'DSAPrivateKey'{version = 0,p = P,q = Q,g = G,y = Y,x = X},Rest};
 ssh2_privkey_decode2(<<TL:32/unsigned-big-integer,"ecdsa-sha2-",KeyRest/binary>>) ->

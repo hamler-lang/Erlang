@@ -48,7 +48,7 @@ check_regexp(String) ->
             return_error(Position,["invalid_regexp", String, ErrString])
     end.
 
-check_regexp_variable('_') ->
+check_regexp_variable(_) ->
     variable;
 check_regexp_variable(Var) ->
     return_error(0,["invalid_regexp_variable", Var]).
@@ -157,13 +157,13 @@ c2s(C) ->
     list_to_atom(S).
 
 re(variable) ->
-    ['_'];
+    [_];
 re({atom,Atom}) ->
     [Atom];
 re({integer,Int}) ->
     [Int];
 re({regexpr,Str}) ->
-    ['"', list_to_atom(Str), '"'].
+    ['\"', list_to_atom(Str), '\"'].
 
 left(P1,P2)
     when P1 > P2->
@@ -463,28 +463,28 @@ yeccpars2_2(S,':=',Ss,Stack,T,Ts,Tzr) ->
 yeccpars2_2(S,'=',Ss,Stack,T,Ts,Tzr) ->
     yeccpars1(S,78,Ss,Stack,T,Ts,Tzr);
 yeccpars2_2(_S,'$end',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_2_\'$end\''(Stack),
+    NewStack = 'yeccpars2_2_\\\'$end\\\''(Stack),
     yeccgoto_expr(hd(Ss),'$end',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_2(_S,'*',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_2_\'*\''(Stack),
+    NewStack = 'yeccpars2_2_\\\'*\\\''(Stack),
     yeccgoto_expr(hd(Ss),'*',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_2(_S,'+',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_2_\'+\''(Stack),
+    NewStack = 'yeccpars2_2_\\\'+\\\''(Stack),
     yeccgoto_expr(hd(Ss),'+',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_2(_S,'-',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_2_\'-\''(Stack),
+    NewStack = 'yeccpars2_2_\\\'-\\\''(Stack),
     yeccgoto_expr(hd(Ss),'-',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_2(_S,'of',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_2_\'of\''(Stack),
+    NewStack = 'yeccpars2_2_\\\'of\\\''(Stack),
     yeccgoto_expr(hd(Ss),'of',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_2(_S,'|',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_2_\'|\''(Stack),
+    NewStack = 'yeccpars2_2_\\\'|\\\''(Stack),
     yeccgoto_expr(hd(Ss),'|',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_2(_S,'||',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_2_\'||\''(Stack),
+    NewStack = 'yeccpars2_2_\\\'||\\\''(Stack),
     yeccgoto_expr(hd(Ss),'||',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_2(_S,'|||',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_2_\'|||\''(Stack),
+    NewStack = 'yeccpars2_2_\\\'|||\\\''(Stack),
     yeccgoto_expr(hd(Ss),'|||',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_2(_S,Cat,Ss,Stack,T,Ts,Tzr) ->
     NewStack = yeccpars2_2_(Stack),
@@ -505,34 +505,34 @@ yeccpars2_5(_S,Cat,Ss,Stack,T,Ts,Tzr) ->
 yeccpars2_6(S,decl,Ss,Stack,T,Ts,Tzr) ->
     yeccpars1(S,33,Ss,Stack,T,Ts,Tzr);
 yeccpars2_6(_S,'$end',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\'$end\''(Stack),
+    NewStack = 'yeccpars2_6_\\\'$end\\\''(Stack),
     yeccpars2_73(_S,'$end',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,')',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\')\''(Stack),
+    NewStack = 'yeccpars2_6_\\\')\\\''(Stack),
     yeccpars2_73(_S,')',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,'*',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\'*\''(Stack),
+    NewStack = 'yeccpars2_6_\\\'*\\\''(Stack),
     yeccpars2_73(_S,'*',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,'+',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\'+\''(Stack),
+    NewStack = 'yeccpars2_6_\\\'+\\\''(Stack),
     yeccpars2_73(_S,'+',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,',',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\',\''(Stack),
+    NewStack = 'yeccpars2_6_\\\',\\\''(Stack),
     yeccpars2_73(_S,',',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,'-',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\'-\''(Stack),
+    NewStack = 'yeccpars2_6_\\\'-\\\''(Stack),
     yeccpars2_73(_S,'-',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,'of',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\'of\''(Stack),
+    NewStack = 'yeccpars2_6_\\\'of\\\''(Stack),
     yeccpars2_73(_S,'of',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,'|',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\'|\''(Stack),
+    NewStack = 'yeccpars2_6_\\\'|\\\''(Stack),
     yeccpars2_73(_S,'|',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,'||',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\'||\''(Stack),
+    NewStack = 'yeccpars2_6_\\\'||\\\''(Stack),
     yeccpars2_73(_S,'||',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,'|||',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_6_\'|||\''(Stack),
+    NewStack = 'yeccpars2_6_\\\'|||\\\''(Stack),
     yeccpars2_73(_S,'|||',[6| Ss],NewStack,T,Ts,Tzr);
 yeccpars2_6(_S,Cat,Ss,Stack,T,Ts,Tzr) ->
     yeccgoto_regatom(hd(Ss),Cat,Ss,Stack,T,Ts,Tzr).
@@ -566,37 +566,37 @@ yeccpars2_10(_S,vertex,Ss,Stack,T,Ts,Tzr) ->
 yeccpars2_10(_S,'{',Ss,Stack,T,Ts,Tzr) ->
     yeccgoto_prefix_op(hd(Ss),'{',Ss,Stack,T,Ts,Tzr);
 yeccpars2_10(_S,'$end',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\'$end\''(Stack),
+    NewStack = 'yeccpars2_10_\\\'$end\\\''(Stack),
     yeccgoto_const(hd(Ss),'$end',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,')',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\')\''(Stack),
+    NewStack = 'yeccpars2_10_\\\')\\\''(Stack),
     yeccgoto_const(hd(Ss),')',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,'*',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\'*\''(Stack),
+    NewStack = 'yeccpars2_10_\\\'*\\\''(Stack),
     yeccgoto_const(hd(Ss),'*',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,'+',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\'+\''(Stack),
+    NewStack = 'yeccpars2_10_\\\'+\\\''(Stack),
     yeccgoto_const(hd(Ss),'+',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,',',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\',\''(Stack),
+    NewStack = 'yeccpars2_10_\\\',\\\''(Stack),
     yeccgoto_const(hd(Ss),',',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,'-',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\'-\''(Stack),
+    NewStack = 'yeccpars2_10_\\\'-\\\''(Stack),
     yeccgoto_const(hd(Ss),'-',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,decl,Ss,Stack,T,Ts,Tzr) ->
     NewStack = yeccpars2_10_decl(Stack),
     yeccgoto_const(hd(Ss),decl,Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,'of',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\'of\''(Stack),
+    NewStack = 'yeccpars2_10_\\\'of\\\''(Stack),
     yeccgoto_const(hd(Ss),'of',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,'|',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\'|\''(Stack),
+    NewStack = 'yeccpars2_10_\\\'|\\\''(Stack),
     yeccgoto_const(hd(Ss),'|',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,'||',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\'||\''(Stack),
+    NewStack = 'yeccpars2_10_\\\'||\\\''(Stack),
     yeccgoto_const(hd(Ss),'||',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,'|||',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_10_\'|||\''(Stack),
+    NewStack = 'yeccpars2_10_\\\'|||\\\''(Stack),
     yeccgoto_const(hd(Ss),'|||',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_10(_S,Cat,Ss,Stack,T,Ts,Tzr) ->
     NewStack = yeccpars2_10_(Stack),
@@ -751,34 +751,34 @@ yeccpars2_37(_S,Cat,Ss,Stack,T,Ts,Tzr) ->
     yeccgoto_expr(hd(Nss),Cat,Nss,NewStack,T,Ts,Tzr).
 
 yeccpars2_38(_S,'$end',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\'$end\''(Stack),
+    NewStack = 'yeccpars2_38_\\\'$end\\\''(Stack),
     yeccgoto_expr(hd(Ss),'$end',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,')',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\')\''(Stack),
+    NewStack = 'yeccpars2_38_\\\')\\\''(Stack),
     yeccgoto_expr(hd(Ss),')',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,'*',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\'*\''(Stack),
+    NewStack = 'yeccpars2_38_\\\'*\\\''(Stack),
     yeccgoto_expr(hd(Ss),'*',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,'+',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\'+\''(Stack),
+    NewStack = 'yeccpars2_38_\\\'+\\\''(Stack),
     yeccgoto_expr(hd(Ss),'+',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,',',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\',\''(Stack),
+    NewStack = 'yeccpars2_38_\\\',\\\''(Stack),
     yeccgoto_expr(hd(Ss),',',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,'-',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\'-\''(Stack),
+    NewStack = 'yeccpars2_38_\\\'-\\\''(Stack),
     yeccgoto_expr(hd(Ss),'-',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,'of',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\'of\''(Stack),
+    NewStack = 'yeccpars2_38_\\\'of\\\''(Stack),
     yeccgoto_expr(hd(Ss),'of',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,'|',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\'|\''(Stack),
+    NewStack = 'yeccpars2_38_\\\'|\\\''(Stack),
     yeccgoto_expr(hd(Ss),'|',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,'||',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\'||\''(Stack),
+    NewStack = 'yeccpars2_38_\\\'||\\\''(Stack),
     yeccgoto_expr(hd(Ss),'||',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,'|||',Ss,Stack,T,Ts,Tzr) ->
-    NewStack = 'yeccpars2_38_\'|||\''(Stack),
+    NewStack = 'yeccpars2_38_\\\'|||\\\''(Stack),
     yeccgoto_expr(hd(Ss),'|||',Ss,NewStack,T,Ts,Tzr);
 yeccpars2_38(_S,Cat,Ss,Stack,T,Ts,Tzr) ->
     NewStack = yeccpars2_38_(Stack),
@@ -1481,67 +1481,67 @@ yeccgoto_variable(76 = _S,Cat,Ss,Stack,T,Ts,Tzr) ->
 yeccgoto_xref(0,Cat,Ss,Stack,T,Ts,Tzr) ->
     yeccpars2_1(1,Cat,Ss,Stack,T,Ts,Tzr).
 
--compile({inline,{'yeccpars2_2_\'$end\'',1}}).
+-compile({inline,{'yeccpars2_2_\\\'$end\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_2_\'$end\''(__Stack0) ->
+'yeccpars2_2_\\\'$end\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_2_\'*\'',1}}).
+-compile({inline,{'yeccpars2_2_\\\'*\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_2_\'*\''(__Stack0) ->
+'yeccpars2_2_\\\'*\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_2_\'+\'',1}}).
+-compile({inline,{'yeccpars2_2_\\\'+\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_2_\'+\''(__Stack0) ->
+'yeccpars2_2_\\\'+\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_2_\'-\'',1}}).
+-compile({inline,{'yeccpars2_2_\\\'-\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_2_\'-\''(__Stack0) ->
+'yeccpars2_2_\\\'-\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_2_\'of\'',1}}).
+-compile({inline,{'yeccpars2_2_\\\'of\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_2_\'of\''(__Stack0) ->
+'yeccpars2_2_\\\'of\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_2_\'|\'',1}}).
+-compile({inline,{'yeccpars2_2_\\\'|\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_2_\'|\''(__Stack0) ->
+'yeccpars2_2_\\\'|\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_2_\'||\'',1}}).
+-compile({inline,{'yeccpars2_2_\\\'||\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_2_\'||\''(__Stack0) ->
+'yeccpars2_2_\\\'||\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_2_\'|||\'',1}}).
+-compile({inline,{'yeccpars2_2_\\\'|||\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_2_\'|||\''(__Stack0) ->
+'yeccpars2_2_\\\'|||\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
@@ -1561,121 +1561,121 @@ yeccpars2_4_(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin [__1] end| __Stack].
 
--compile({inline,{'yeccpars2_6_\'$end\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\'$end\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\'$end\''(__Stack0) ->
+'yeccpars2_6_\\\'$end\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\')\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\')\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\')\''(__Stack0) ->
+'yeccpars2_6_\\\')\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\'*\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\'*\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\'*\''(__Stack0) ->
+'yeccpars2_6_\\\'*\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\'+\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\'+\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\'+\''(__Stack0) ->
+'yeccpars2_6_\\\'+\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\',\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\',\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\',\''(__Stack0) ->
+'yeccpars2_6_\\\',\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\'-\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\'-\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\'-\''(__Stack0) ->
+'yeccpars2_6_\\\'-\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\'of\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\'of\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\'of\''(__Stack0) ->
+'yeccpars2_6_\\\'of\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\'|\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\'|\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\'|\''(__Stack0) ->
+'yeccpars2_6_\\\'|\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\'||\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\'||\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\'||\''(__Stack0) ->
+'yeccpars2_6_\\\'||\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_6_\'|||\'',1}}).
+-compile({inline,{'yeccpars2_6_\\\'|||\\\'',1}}).
 
 -file("xref_parser.yrl", 102).
 
-'yeccpars2_6_\'|||\''(__Stack0) ->
+'yeccpars2_6_\\\'|||\\\''(__Stack0) ->
     [begin unknown end| __Stack0].
 
--compile({inline,{'yeccpars2_10_\'$end\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\'$end\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\'$end\''(__Stack0) ->
+'yeccpars2_10_\\\'$end\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\')\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\')\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\')\''(__Stack0) ->
+'yeccpars2_10_\\\')\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\'*\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\'*\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\'*\''(__Stack0) ->
+'yeccpars2_10_\\\'*\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\'+\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\'+\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\'+\''(__Stack0) ->
+'yeccpars2_10_\\\'+\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\',\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\',\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\',\''(__Stack0) ->
+'yeccpars2_10_\\\',\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\'-\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\'-\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\'-\''(__Stack0) ->
+'yeccpars2_10_\\\'-\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
@@ -1687,35 +1687,35 @@ yeccpars2_10_decl(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\'of\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\'of\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\'of\''(__Stack0) ->
+'yeccpars2_10_\\\'of\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\'|\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\'|\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\'|\''(__Stack0) ->
+'yeccpars2_10_\\\'|\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\'||\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\'||\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\'||\''(__Stack0) ->
+'yeccpars2_10_\\\'||\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_10_\'|||\'',1}}).
+-compile({inline,{'yeccpars2_10_\\\'|||\\\'',1}}).
 
 -file("xref_parser.yrl", 79).
 
-'yeccpars2_10_\'|||\''(__Stack0) ->
+'yeccpars2_10_\\\'|||\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {constant,unknown,vertex,__1} end| __Stack].
 
@@ -1865,83 +1865,83 @@ yeccpars2_37_(__Stack0) ->
     [__5, __4, __3, __2, __1| __Stack] = __Stack0,
     [begin type({list,[__2| __3]},__5) end| __Stack].
 
--compile({inline,{'yeccpars2_38_\'$end\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\'$end\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\'$end\''(__Stack0) ->
+'yeccpars2_38_\\\'$end\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\')\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\')\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\')\''(__Stack0) ->
+'yeccpars2_38_\\\')\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\'*\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\'*\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\'*\''(__Stack0) ->
+'yeccpars2_38_\\\'*\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\'+\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\'+\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\'+\''(__Stack0) ->
+'yeccpars2_38_\\\'+\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\',\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\',\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\',\''(__Stack0) ->
+'yeccpars2_38_\\\',\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\'-\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\'-\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\'-\''(__Stack0) ->
+'yeccpars2_38_\\\'-\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\'of\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\'of\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\'of\''(__Stack0) ->
+'yeccpars2_38_\\\'of\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\'|\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\'|\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\'|\''(__Stack0) ->
+'yeccpars2_38_\\\'|\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\'||\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\'||\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\'||\''(__Stack0) ->
+'yeccpars2_38_\\\'||\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 
--compile({inline,{'yeccpars2_38_\'|||\'',1}}).
+-compile({inline,{'yeccpars2_38_\\\'|||\\\'',1}}).
 
 -file("xref_parser.yrl", 63).
 
-'yeccpars2_38_\'|||\''(__Stack0) ->
+'yeccpars2_38_\\\'|||\\\''(__Stack0) ->
     [__1| __Stack] = __Stack0,
     [begin {variable,__1} end| __Stack].
 

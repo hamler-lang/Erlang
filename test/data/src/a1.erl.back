@@ -1,0 +1,74 @@
+-module(a1).
+
+-export([start/2]).
+
+start(A,B) ->
+    begin 
+        (
+            fun (X)->
+                X
+            end)(A),
+        TF = 
+            fun (X)->
+                case X of
+                    1 ->
+                        1;
+                    2 ->
+                        1
+                end
+            end,
+        K = #{1=>A,3=>1 + TF(1)},
+        S = TF,
+        case K of
+            abcd ->
+                2;
+            22 ->
+                12;
+            <<1,B>> ->
+                B;
+            {1,B} ->
+                S(1);
+            #{1:=1,2:=aa} ->
+                start(0,1)
+        end
+     end.
+
+ft(A,B) ->
+    start(A,B).
+
+myfun(T,'_') ->
+    case T of
+        {foo,Bar} = Var ->
+            start(Var,stuff)
+    end.
+
+myfun1(T) ->
+    case T of
+        Var = {foo,Bar} ->
+            start(Var,stuff);
+        [1, 2, 3| X] ->
+            X
+    end.
+
+myfun2() ->
+    case [1, 2, 3, 4] of
+        [1| [2| [3| [4| []]]]] ->
+            1
+    end.
+
+myfun3() ->
+    receive
+        2 ->
+            2
+    after atom->
+        23
+    end.
+
+myfun4() ->
+    T = 
+        fun (X)->
+                fun (Y)->
+                    X + Y
+                end
+        end,
+    (T(1))(2).

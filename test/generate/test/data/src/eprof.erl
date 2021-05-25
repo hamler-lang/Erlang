@@ -10,7 +10,7 @@
 
 -record(bpd, {n = 0,us = 0,p = gb_trees:empty(),mfa = []}).
 
--record(state, {profiling = false,pattern = {'_','_','_'},rootset = [],trace_opts = [],fd = undefined,start_ts = undefined,reply = undefined,bpd = #bpd{}}).
+-record(state, {profiling = false,pattern = {_,_,_},rootset = [],trace_opts = [],fd = undefined,start_ts = undefined,reply = undefined,bpd = #bpd{}}).
 
 start() ->
     gen_server:start({local,eprof},eprof,[],[]).
@@ -42,11 +42,11 @@ profile(Fun)
 profile(Fun,Opts)
     when is_function(Fun),
     is_list(Opts)->
-    profile([],erlang,apply,[Fun, []],{'_','_','_'},Opts);
+    profile([],erlang,apply,[Fun, []],{_,_,_},Opts);
 profile(Rootset,Fun)
     when is_list(Rootset),
     is_function(Fun)->
-    profile(Rootset,Fun,{'_','_','_'}).
+    profile(Rootset,Fun,{_,_,_}).
 
 profile(Rootset,Fun,Pattern)
     when is_list(Rootset),
@@ -63,7 +63,7 @@ profile(Rootset,M,F,A)
     is_atom(M),
     is_atom(F),
     is_list(A)->
-    profile(Rootset,M,F,A,{'_','_','_'}).
+    profile(Rootset,M,F,A,{_,_,_}).
 
 profile(Rootset,M,F,A,Pattern)
     when is_list(Rootset),
@@ -86,7 +86,7 @@ log(File) ->
     gen_server:call(eprof,{logfile,File},infinity).
 
 start_profiling(Rootset) ->
-    start_profiling(Rootset,{'_','_','_'}).
+    start_profiling(Rootset,{_,_,_}).
 
 start_profiling(Rootset,Pattern) ->
     start_profiling(Rootset,Pattern,[{set_on_spawn,true}]).
@@ -148,7 +148,7 @@ handle_call(profile_stop,_From,#state{profiling = true} = S) ->
     Bpd = collect_bpd(),
     _ = set_process_trace(false,S#state.rootset,S#state.trace_opts),
     ok = set_pattern_trace(false,S#state.pattern),
-    {reply,profiling_stopped,S#state{profiling = false,rootset = [],trace_opts = [],pattern = {'_','_','_'},bpd = Bpd}};
+    {reply,profiling_stopped,S#state{profiling = false,rootset = [],trace_opts = [],pattern = {_,_,_},bpd = Bpd}};
 handle_call({logfile,File},_From,#state{fd = OldFd} = S) ->
     case file:open(File,[write, {encoding,utf8}]) of
         {ok,Fd}->
@@ -182,7 +182,7 @@ handle_info({'EXIT',_,Reason},#state{reply = FromTag} = S) ->
     _ = set_process_trace(false,S#state.rootset,S#state.trace_opts),
     ok = set_pattern_trace(false,S#state.pattern),
     gen_server:reply(FromTag,{error,Reason}),
-    {noreply,S#state{profiling = false,rootset = [],trace_opts = [],pattern = {'_','_','_'}}};
+    {noreply,S#state{profiling = false,rootset = [],trace_opts = [],pattern = {_,_,_}}};
 handle_info({_Pid,{answer,Result}},#state{reply = {From,_} = FromTag} = S) ->
     ok = set_pattern_trace(pause,S#state.pattern),
     Bpd = collect_bpd(),
@@ -190,14 +190,14 @@ handle_info({_Pid,{answer,Result}},#state{reply = {From,_} = FromTag} = S) ->
     ok = set_pattern_trace(false,S#state.pattern),
      catch unlink(From),
     gen_server:reply(FromTag,{ok,Result}),
-    {noreply,S#state{profiling = false,rootset = [],trace_opts = [],pattern = {'_','_','_'},bpd = Bpd}}.
+    {noreply,S#state{profiling = false,rootset = [],trace_opts = [],pattern = {_,_,_},bpd = Bpd}}.
 
 terminate(_Reason,#state{fd = undefined}) ->
-    ok = set_pattern_trace(false,{'_','_','_'}),
+    ok = set_pattern_trace(false,{_,_,_}),
     ok;
 terminate(_Reason,#state{fd = Fd}) ->
     ok = file:close(Fd),
-    ok = set_pattern_trace(false,{'_','_','_'}),
+    ok = set_pattern_trace(false,{_,_,_}),
     ok.
 
 code_change(_OldVsn,State,_Extra) ->

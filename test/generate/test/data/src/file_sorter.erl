@@ -1471,7 +1471,7 @@ file_rterms({Fd,FileName},Files) ->
 
 file_rterms2(Fd,L,LSz,FileName,Files)
     when LSz < 16384->
-    case io:read(Fd,'') of
+    case io:read(Fd,) of
         {ok,Term}->
             B = term_to_binary(Term),
             file_rterms2(Fd,[B| L],LSz + byte_size(B),FileName,Files);

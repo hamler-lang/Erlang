@@ -223,7 +223,7 @@ copy({match,Line,A,B},Bound) ->
     {B1,Bound1} = copy(B,Bound),
     {A1,Bound2} = copy(A,Bound),
     {{match,Line,A1,B1},gb_sets:union(Bound1,Bound2)};
-copy({var,_Line,'_'} = VarDef,Bound) ->
+copy({var,_Line,_} = VarDef,Bound) ->
     {VarDef,Bound};
 copy({var,_Line,Name} = VarDef,Bound) ->
     Bound1 = gb_sets:add(Name,Bound),
@@ -233,7 +233,7 @@ copy({'fun',Line,{clauses,Clauses}},Bound) ->
     {{'fun',Line,{clauses,NewClauses}},Bound};
 copy({named_fun,Line,Name,Clauses},Bound) ->
     Bound1 = case Name of
-        '_'->
+        _->
             Bound;
         Name->
             gb_sets:add(Name,Bound)
@@ -452,7 +452,7 @@ tg({record,Line,RName,RFields},B) ->
     RDefs = get_records(),
     KeyList0 = lists:foldl(fun ({record_field,_,{atom,_,Key},Value},L)->
         NV = tg(Value,B),
-        [{Key,NV}| L];({record_field,_,{var,_,'_'},Value},L)->
+        [{Key,NV}| L];({record_field,_,{var,_,_},Value},L)->
         NV = tg(Value,B),
         [{{default},NV}| L];(_,_)->
         throw({error,Line,{20 + B#tgd.eb,RName}}) end,[],RFields),
@@ -465,7 +465,7 @@ tg({record,Line,RName,RFields},B) ->
     KeyList = lists:keydelete({default},1,KeyList0),
     case lists:keysearch({default},1,KeyList) of
         {value,{{default},_}}->
-            throw({error,Line,{21 + B#tgd.eb,RName,'_'}});
+            throw({error,Line,{21 + B#tgd.eb,RName,_}});
         _->
             ok
     end,
@@ -567,7 +567,7 @@ th({record,Line,RName,RFields},B,OB) ->
     RDefs = get_records(),
     {KeyList0,NewB} = lists:foldl(fun ({record_field,_,{atom,_,Key},Value},{L,B0})->
         {NV,B1} = th(Value,B0,OB),
-        {[{Key,NV}| L],B1};({record_field,_,{var,_,'_'},Value},{L,B0})->
+        {[{Key,NV}| L],B1};({record_field,_,{var,_,_},Value},{L,B0})->
         {NV,B1} = th(Value,B0,OB),
         {[{{default},NV}| L],B1};(_,_)->
         throw({error,Line,{7,RName}}) end,{[],B},RFields),
@@ -575,12 +575,12 @@ th({record,Line,RName,RFields},B,OB) ->
         {value,{{default},OverriddenDefValue}}->
             OverriddenDefValue;
         _->
-            {atom,Line,'_'}
+            {atom,Line,_}
     end,
     KeyList = lists:keydelete({default},1,KeyList0),
     case lists:keysearch({default},1,KeyList) of
         {value,{{default},_}}->
-            throw({error,Line,{9,RName,'_'}});
+            throw({error,Line,{9,RName,_}});
         _->
             ok
     end,
@@ -667,7 +667,7 @@ check_undef_field(RName,Line,[{Key,_}| T],FieldList,ErrCode) ->
     end.
 
 cre_bind() ->
-    {1,[{'_','_'}]}.
+    {1,[{_,_}]}.
 
 lkup_bind(Name,{_,List}) ->
     case lists:keysearch(Name,1,List) of

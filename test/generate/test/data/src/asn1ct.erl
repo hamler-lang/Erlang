@@ -99,9 +99,9 @@ objsets}).
 
 -import(asn1ct_gen_ber_bin_v2, [encode_tag_val/3, decode_class/1]).
 
--removed({decode,'_',"use Mod:decode/2 instead"}).
+-removed({decode,_,"use Mod:decode/2 instead"}).
 
--removed({encode,'_',"use Mod:encode/2 instead"}).
+-removed({encode,_,"use Mod:encode/2 instead"}).
 
 compile(File) ->
     compile(File,[]).
@@ -970,7 +970,7 @@ get_file_list(File,Includes) ->
     end.
 
 get_file_list1(Stream,Dir,Includes,Acc) ->
-    Ret = io:get_line(Stream,''),
+    Ret = io:get_line(Stream,),
     case Ret of
         eof->
             ok = file:close(Stream),

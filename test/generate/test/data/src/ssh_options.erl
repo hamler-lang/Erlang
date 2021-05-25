@@ -16,15 +16,15 @@
 
 -type(alg_entry()::{kex,[kex_alg()]}|{public_key,[pubkey_alg()]}|{cipher,double_algs(cipher_alg())}|{mac,double_algs(mac_alg())}|{compression,double_algs(compression_alg())}).
 
--type(kex_alg()::'diffie-hellman-group-exchange-sha1'|'diffie-hellman-group-exchange-sha256'|'diffie-hellman-group1-sha1'|'diffie-hellman-group14-sha1'|'diffie-hellman-group14-sha256'|'diffie-hellman-group16-sha512'|'diffie-hellman-group18-sha512'|'curve25519-sha256'|'curve25519-sha256@libssh.org'|'curve448-sha512'|'ecdh-sha2-nistp256'|'ecdh-sha2-nistp384'|'ecdh-sha2-nistp521').
+-type(kex_alg()::diffie-hellman-group-exchange-sha1|diffie-hellman-group-exchange-sha256|diffie-hellman-group1-sha1|diffie-hellman-group14-sha1|diffie-hellman-group14-sha256|diffie-hellman-group16-sha512|diffie-hellman-group18-sha512|curve25519-sha256|curve25519-sha256@libssh.org|curve448-sha512|ecdh-sha2-nistp256|ecdh-sha2-nistp384|ecdh-sha2-nistp521).
 
--type(pubkey_alg()::'ecdsa-sha2-nistp256'|'ecdsa-sha2-nistp384'|'ecdsa-sha2-nistp521'|'ssh-ed25519'|'ssh-ed448'|'rsa-sha2-256'|'rsa-sha2-512'|'ssh-dss'|'ssh-rsa').
+-type(pubkey_alg()::ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521|ssh-ed25519|ssh-ed448|rsa-sha2-256|rsa-sha2-512|ssh-dss|ssh-rsa).
 
--type(cipher_alg()::'3des-cbc'|'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|'aes128-cbc'|'aes128-ctr'|'aes128-gcm@openssh.com'|'aes192-ctr'|'aes192-cbc'|'aes256-cbc'|'aes256-ctr'|'aes256-gcm@openssh.com'|'chacha20-poly1305@openssh.com').
+-type(cipher_alg()::'3des-cbc'|'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|aes128-cbc|aes128-ctr|aes128-gcm@openssh.com|aes192-ctr|aes192-cbc|aes256-cbc|aes256-ctr|aes256-gcm@openssh.com|chacha20-poly1305@openssh.com).
 
--type(mac_alg()::'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|'hmac-sha1'|'hmac-sha1-etm@openssh.com'|'hmac-sha1-96'|'hmac-sha2-256'|'hmac-sha2-512'|'hmac-sha2-256-etm@openssh.com'|'hmac-sha2-512-etm@openssh.com').
+-type(mac_alg()::'AEAD_AES_128_GCM'|'AEAD_AES_256_GCM'|hmac-sha1|hmac-sha1-etm@openssh.com|hmac-sha1-96|hmac-sha2-256|hmac-sha2-512|hmac-sha2-256-etm@openssh.com|hmac-sha2-512-etm@openssh.com).
 
--type(compression_alg()::none|zlib|'zlib@openssh.com').
+-type(compression_alg()::none|zlib|zlib@openssh.com).
 
 -type(double_algs(AlgType)::[{client2server,[AlgType]}|{server2client,[AlgType]}]|[AlgType]).
 
@@ -108,23 +108,23 @@
 
 -type(shell_spec()::mod_fun_args()|shell_fun()|disabled).
 
--type(shell_fun()::'shell_fun/1'()|'shell_fun/2'()).
+-type(shell_fun()::shell_fun/1()|shell_fun/2()).
 
--type('shell_fun/1'()::fun((User::string()) -> pid())).
+-type(shell_fun/1()::fun((User::string()) -> pid())).
 
--type('shell_fun/2'()::fun((User::string(),PeerAddr::inet:ip_address()) -> pid())).
+-type(shell_fun/2()::fun((User::string(),PeerAddr::inet:ip_address()) -> pid())).
 
 -type(exec_daemon_option()::{exec,exec_spec()}).
 
 -type(exec_spec()::{direct,exec_fun()}|disabled|deprecated_exec_opt()).
 
--type(exec_fun()::'exec_fun/1'()|'exec_fun/2'()|'exec_fun/3'()).
+-type(exec_fun()::exec_fun/1()|exec_fun/2()|exec_fun/3()).
 
--type('exec_fun/1'()::fun((Cmd::string()) -> exec_result())).
+-type(exec_fun/1()::fun((Cmd::string()) -> exec_result())).
 
--type('exec_fun/2'()::fun((Cmd::string(),User::string()) -> exec_result())).
+-type(exec_fun/2()::fun((Cmd::string(),User::string()) -> exec_result())).
 
--type('exec_fun/3'()::fun((Cmd::string(),User::string(),ClientAddr::ip_port()) -> exec_result())).
+-type(exec_fun/3()::fun((Cmd::string(),User::string(),ClientAddr::ip_port()) -> exec_result())).
 
 -type(exec_result()::{ok,Result::term()}|{error,Reason::term()}).
 
@@ -645,8 +645,8 @@ check_pref_public_key_algs(V) ->
                 error_in_check(A,"Not supported public key")
         end end,
     case lists:foldr(fun (ssh_dsa,Ack)->
-        CHK('ssh-dss',Ack);(ssh_rsa,Ack)->
-        CHK('ssh-rsa',Ack);(X,Ack)->
+        CHK(ssh-dss,Ack);(ssh_rsa,Ack)->
+        CHK(ssh-rsa,Ack);(X,Ack)->
         CHK(X,Ack) end,[],V) of
         V->
             true;

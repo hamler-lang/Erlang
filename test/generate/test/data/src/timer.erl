@@ -271,7 +271,7 @@ delete_ref(BRef) ->
 -spec(pid_delete(pid()) -> ok).
 
 pid_delete(Pid) ->
-    IntervalTimerList = ets:select(timer_interval_tab,[{{'_','_','$1'},[{'==','$1',Pid}],['$_']}]),
+    IntervalTimerList = ets:select(timer_interval_tab,[{{_,_,'$1'},[{'==','$1',Pid}],['$_']}]),
     lists:foreach(fun ({IntKey,TimerKey,_})->
         ets:delete(timer_interval_tab,IntKey),
         ets:delete(timer_tab,TimerKey) end,IntervalTimerList).

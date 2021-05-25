@@ -344,7 +344,7 @@ pre_process_oid([H| T] = Tail,Res0,Acc) ->
     end.
 
 reserved_oid() ->
-    [{['itu-t', ccitt],0,[{recommendation,0,[]}, {question,1,[]}, {administration,2,[]}, {'network-operator',3,[]}, {'identified-organization',4,[]}]}, {iso,1,[{standard,0,[]}, {'member-body',2,[]}, {'identified-organization',3,[]}]}, {['joint-iso-itu-t', 'joint-iso-ccitt'],2,[]}].
+    [{[itu-t, ccitt],0,[{recommendation,0,[]}, {question,1,[]}, {administration,2,[]}, {network-operator,3,[]}, {identified-organization,4,[]}]}, {iso,1,[{standard,0,[]}, {member-body,2,[]}, {identified-organization,3,[]}]}, {[joint-iso-itu-t, joint-iso-ccitt],2,[]}].
 
 arg2str(Args) ->
     [(", " ++ term2str(Arg)) || Arg <- Args].

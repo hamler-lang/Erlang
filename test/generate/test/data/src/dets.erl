@@ -117,7 +117,7 @@ delete_all_objects(Tab) ->
         badarg->
             error(badarg,[Tab]);
         fixed->
-            match_delete(Tab,'_');
+            match_delete(Tab,_);
         Reply->
             Reply
     end.
@@ -162,7 +162,7 @@ foldl(Fun,Acc,Tab) ->
 
 from_ets(DTab,ETab) ->
     ets:safe_fixtable(ETab,true),
-    Spec = [{'_',[],['$_']}],
+    Spec = [{_,[],['$_']}],
     LC = ets:select(ETab,Spec,100),
     InitFun = from_ets_fun(LC,ETab),
     Reply = treq(DTab,{initialize,InitFun,term,default}),
@@ -621,7 +621,7 @@ do_traverse(Fun,Acc,Tab,Ref) ->
     end.
 
 do_trav(Proc,Acc,Fun) ->
-    {Spec,MP} = compile_match_spec(object,'_'),
+    {Spec,MP} = compile_match_spec(object,_),
     case req(Proc,{match,MP,Spec,default,safe}) of
         {cont,State}->
             do_trav(State,Proc,Acc,Fun);
@@ -732,7 +732,7 @@ foldl_bins([Bin| Bins],MP,Terms) ->
             foldl_bins(Bins,MP,[Result| Terms])
     end.
 
-compile_match_spec(select,[{'_',[],['$_']}] = Spec) ->
+compile_match_spec(select,[{_,[],['$_']}] = Spec) ->
     {Spec,true};
 compile_match_spec(select,Spec) ->
     try {Spec,{match_spec,ets:match_spec_compile(Spec)}}
@@ -1913,7 +1913,7 @@ find_all_keys([{H,_,_}| T],KeyPos,Ks)
 find_all_keys(_,_,_) ->
     [].
 
-contains_variable('_') ->
+contains_variable(_) ->
     true;
 contains_variable(A)
     when is_atom(A)->
@@ -1974,7 +1974,7 @@ fmatch_delete(Head,C) ->
             end
     end.
 
-do_fmatch_delete_var_keys(Head,_MP,[{'_',[],[true]}],_From)
+do_fmatch_delete_var_keys(Head,_MP,[{_,[],[true]}],_From)
     when Head#head.fixed =:= false->
     {Head1,[]} = write_cache(Head),
     N = Head1#head.no_objects,

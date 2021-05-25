@@ -326,7 +326,7 @@ build_typed_attribute({atom,Aa,record},{typed_record,{atom,_An,RecordName},RecTu
 build_typed_attribute({atom,Aa,Attr},{type_def,{call,_,{atom,_,TypeName},Args},Type})
     when Attr =:= type;
     Attr =:= opaque->
-    lists:foreach(fun ({var,A,'_'})->
+    lists:foreach(fun ({var,A,_})->
         ret_err(A,"bad type variable");(_)->
         ok end,Args),
     case lists:all(fun ({var,_,_})->
@@ -381,7 +381,7 @@ build_constraint({atom,_,is_subtype},[{var,_,_} = LHS, Type]) ->
     build_constraint(LHS,Type);
 build_constraint({atom,A,Atom},_Foo) ->
     ret_err(A,io_lib:format("unsupported constraint ~tw",[Atom]));
-build_constraint({var,A,'_'},_Types) ->
+build_constraint({var,A,_},_Types) ->
     ret_err(A,"bad type variable");
 build_constraint(LHS,Type) ->
     IsSubType = {atom,element(2,LHS),is_subtype},
@@ -400,7 +400,7 @@ build_gen_type({atom,Aa,Name}) ->
     Tag = type_tag(Name,0),
     {Tag,Aa,Name,[]}.
 
-build_bin_type([{var,_,'_'}| Left],Int) ->
+build_bin_type([{var,_,_}| Left],Int) ->
     build_bin_type(Left,Int);
 build_bin_type([],Int) ->
     Int;
@@ -9634,7 +9634,7 @@ yeccpars2_110_(__Stack0) ->
 -file("erl_parse.yrl", 515).
 
 yeccpars2_114_(__Stack0) ->
-    [begin '_' end| __Stack0].
+    [begin _ end| __Stack0].
 
 -compile({inline,{yeccpars2_115_,1}}).
 
@@ -9667,7 +9667,7 @@ yeccpars2_119_(__Stack0) ->
 -file("erl_parse.yrl", 515).
 
 yeccpars2_121_(__Stack0) ->
-    [begin '_' end| __Stack0].
+    [begin _ end| __Stack0].
 
 -compile({inline,{yeccpars2_122_,1}}).
 
@@ -9696,7 +9696,7 @@ yeccpars2_124_(__Stack0) ->
 yeccpars2_126_(__Stack0) ->
     [__3, __2, __1| __Stack] = __Stack0,
     [begin A = element(2,__1),
-    {clause,A,[{tuple,A,[{atom,A,throw}, __1, {var,A,'_'}]}],__2,__3} end| __Stack].
+    {clause,A,[{tuple,A,[{atom,A,throw}, __1, {var,A,_}]}],__2,__3} end| __Stack].
 
 -compile({inline,{yeccpars2_128_,1}}).
 

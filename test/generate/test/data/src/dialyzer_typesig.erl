@@ -295,7 +295,7 @@ traverse(Tree,DefinedVars,State) ->
             State6 = state__store_fun_arity(Tree,State5),
             State7 = state__add_fun_to_scc(TreeVar,State6),
             {State7,TreeVar};
-        'let'->
+        let->
             Vars = cerl:let_vars(Tree),
             Arg = cerl:let_arg(Tree),
             Body = cerl:let_body(Tree),

@@ -234,7 +234,7 @@ coerce_to_float({integer,L,I} = E,float) ->
 coerce_to_float(E,_Type) ->
     E.
 
-add_bin_binding(_,{var,_,'_'},_Bs,BBs) ->
+add_bin_binding(_,{var,_,_},_Bs,BBs) ->
     BBs;
 add_bin_binding(Mfun,{var,_,Name},Bs,BBs) ->
     {value,Value} = Mfun(binding,{Name,Bs}),

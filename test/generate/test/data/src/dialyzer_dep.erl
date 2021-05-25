@@ -143,7 +143,7 @@ traverse(Tree,Out,State,CurrentFun) ->
             Out1 = bind_single(Vars,output(set__singleton(external)),Out),
             {BodyFuns,State2} = traverse(Body,Out1,State1,cerl_trees:get_label(Tree)),
             {output(set__singleton(Label)),state__add_esc(BodyFuns,State2)};
-        'let'->
+        let->
             Vars = cerl:let_vars(Tree),
             Arg = cerl:let_arg(Tree),
             Body = cerl:let_body(Tree),

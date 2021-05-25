@@ -70,9 +70,9 @@ from_term(T) ->
     Type = case T of
         _
             when is_list(T)->
-            ['_'];
+            [_];
         _->
-            '_'
+            _
     end,
     try setify(T,Type)
         catch
@@ -102,13 +102,13 @@ from_external(T,Type) ->
 -spec(empty_set() -> Set when Set::a_set()).
 
 empty_set() ->
-    #'Set'{data = [],type = '_'}.
+    #'Set'{data = [],type = _}.
 
 -spec(is_type(Term) -> Bool when Bool::boolean(),Term::term()).
 
 is_type(Atom)
     when is_atom(Atom),
-    Atom =/= '_'->
+    Atom =/= _->
     true;
 is_type([T]) ->
     is_element_type(T);
@@ -132,7 +132,7 @@ set(L) ->
 
 set(L,[Type])
     when is_atom(Type),
-    Type =/= '_'->
+    Type =/= _->
     try usort(L) of 
         SL->
             #'Set'{data = SL,type = Type}
@@ -151,7 +151,7 @@ set(_,_) ->
 
 from_sets(Ss)
     when is_list(Ss)->
-    case set_of_sets(Ss,[],'_') of
+    case set_of_sets(Ss,[],_) of
         {error,Error}->
             error(Error);
         Set->
@@ -374,8 +374,8 @@ symmetric_partition(S1,S2)
 product(S1,S2)
     when is_record(S1,'Set'),
     is_record(S2,'Set')->
-    if S1#'Set'.type =:= '_' ->
-        S1;S2#'Set'.type =:= '_' ->
+    if S1#'Set'.type =:= _ ->
+        S1;S2#'Set'.type =:= _ ->
         S2;true ->
         F = fun (E)->
             {0,E} end,
@@ -409,7 +409,7 @@ product(T)
 constant_function(S,E)
     when is_record(S,'Set')->
     case {S#'Set'.type,is_sofs_set(E)} of
-        {'_',true}->
+        {_,true}->
             S;
         {Type,true}->
             NType = {Type,type(E)},
@@ -515,7 +515,7 @@ union(Sets)
     case Sets#'Set'.type of
         [Type]->
             #'Set'{data = lunion(Sets#'Set'.data),type = Type};
-        '_'->
+        _->
             Sets;
         _->
             error(badarg)
@@ -543,11 +543,11 @@ canonical_relation(Sets)
     when is_record(Sets,'Set')->
     ST = Sets#'Set'.type,
     case ST of
-        ['_']->
+        [_]->
             empty_set();
         [Type]->
             #'Set'{data = can_rel(Sets#'Set'.data,[]),type = {Type,ST}};
-        '_'->
+        _->
             Sets;
         _->
             error(badarg)
@@ -565,7 +565,7 @@ relation_to_family(R)
     case R#'Set'.type of
         {DT,RT}->
             #'Set'{data = rel2family(R#'Set'.data),type = {DT,[RT]}};
-        '_'->
+        _->
             R;
         _Else->
             error(badarg)
@@ -578,7 +578,7 @@ domain(R)
     case R#'Set'.type of
         {DT,_}->
             #'Set'{data = dom(R#'Set'.data),type = DT};
-        '_'->
+        _->
             R;
         _Else->
             error(badarg)
@@ -591,7 +591,7 @@ range(R)
     case R#'Set'.type of
         {_,RT}->
             #'Set'{data = ran(R#'Set'.data,[]),type = RT};
-        '_'->
+        _->
             R;
         _->
             error(badarg)
@@ -632,7 +632,7 @@ relative_product(RL,R)
     EmptyR = case R#'Set'.type of
         {_,_}->
             R#'Set'.data =:= [];
-        '_'->
+        _->
             true;
         _->
             error(badarg)
@@ -652,25 +652,25 @@ relative_product1(R1,R2)
     {DTR1,RTR1} = case R1#'Set'.type of
         {_,_} = R1T->
             R1T;
-        '_'->
-            {'_','_'};
+        _->
+            {_,_};
         _->
             error(badarg)
     end,
     {DTR2,RTR2} = case R2#'Set'.type of
         {_,_} = R2T->
             R2T;
-        '_'->
-            {'_','_'};
+        _->
+            {_,_};
         _->
             error(badarg)
     end,
     case match_types(DTR1,DTR2) of
         true
-            when DTR1 =:= '_'->
+            when DTR1 =:= _->
             R1;
         true
-            when DTR2 =:= '_'->
+            when DTR2 =:= _->
             R2;
         true->
             #'Set'{data = relprod(R1#'Set'.data,R2#'Set'.data),type = {RTR1,RTR2}};
@@ -685,7 +685,7 @@ converse(R)
     case R#'Set'.type of
         {DT,RT}->
             #'Set'{data = converse(R#'Set'.data,[]),type = {RT,DT}};
-        '_'->
+        _->
             R;
         _->
             error(badarg)
@@ -704,7 +704,7 @@ image(R,S)
                 false->
                     error(type_mismatch)
             end;
-        '_'->
+        _->
             R;
         _->
             error(badarg)
@@ -724,7 +724,7 @@ inverse_image(R,S)
                 false->
                     error(type_mismatch)
             end;
-        '_'->
+        _->
             R;
         _->
             error(badarg)
@@ -737,7 +737,7 @@ strict_relation(R)
     case R#'Set'.type of
         Type = {_,_}->
             #'Set'{data = strict(R#'Set'.data,[]),type = Type};
-        '_'->
+        _->
             R;
         _->
             error(badarg)
@@ -755,7 +755,7 @@ weak_relation(R)
                 Type->
                     #'Set'{data = weak(R#'Set'.data),type = {Type,Type}}
             end;
-        '_'->
+        _->
             R;
         _->
             error(badarg)
@@ -780,11 +780,11 @@ extension(R,S,E)
                             #'Set'{data = merge(RL,reverse(L)),type = T}
                     end
             end;
-        {'_','_',true}->
+        {_,_,true}->
             R;
-        {'_',ST,true}->
+        {_,ST,true}->
             case type(E) of
-                ['_']->
+                [_]->
                     R;
                 ET->
                     #'Set'{data = [],type = {ST,ET}}
@@ -805,7 +805,7 @@ is_a_function(R)
                 [{V,_}| Es]->
                     is_a_func(Es,V)
             end;
-        '_'->
+        _->
             true;
         _->
             error(badarg)
@@ -829,25 +829,25 @@ composite(Fn1,Fn2)
     {DTF1,RTF1} = case Fn1#'Set'.type of
         {_,_} = F1T->
             F1T;
-        '_'->
-            {'_','_'};
+        _->
+            {_,_};
         _->
             error(badarg)
     end,
     {DTF2,RTF2} = case Fn2#'Set'.type of
         {_,_} = F2T->
             F2T;
-        '_'->
-            {'_','_'};
+        _->
+            {_,_};
         _->
             error(badarg)
     end,
     case match_types(RTF1,DTF2) of
         true
-            when DTF1 =:= '_'->
+            when DTF1 =:= _->
             Fn1;
         true
-            when DTF2 =:= '_'->
+            when DTF2 =:= _->
             Fn2;
         true->
             case comp(Fn1#'Set'.data,Fn2#'Set'.data) of
@@ -874,7 +874,7 @@ inverse(Fn)
                 Bad->
                     error(Bad)
             end;
-        '_'->
+        _->
             Fn;
         _->
             error(badarg)
@@ -918,7 +918,7 @@ restriction(SetFun,S1,S2)
     SL1 = S1#'Set'.data,
     case external_fun(SetFun) of
         false
-            when Type2 =:= '_'->
+            when Type2 =:= _->
             S2;
         false->
             case subst(SL1,SetFun,element_type(Type1)) of
@@ -934,7 +934,7 @@ restriction(SetFun,S1,S2)
                     error(Bad)
             end;
         _
-            when Type1 =:= '_'->
+            when Type1 =:= _->
             S1;
         _XFun
             when is_list(Type1)->
@@ -993,7 +993,7 @@ drestriction(SetFun,S1,S2)
     SL1 = S1#'Set'.data,
     case external_fun(SetFun) of
         false
-            when Type2 =:= '_'->
+            when Type2 =:= _->
             S1;
         false->
             case subst(SL1,SetFun,element_type(Type1)) of
@@ -1010,7 +1010,7 @@ drestriction(SetFun,S1,S2)
                     error(Bad)
             end;
         _
-            when Type1 =:= '_'->
+            when Type1 =:= _->
             S1;
         _XFun
             when is_list(Type1)->
@@ -1084,7 +1084,7 @@ substitution(SetFun,Set)
         false->
             empty_set();
         _
-            when Type =:= '_'->
+            when Type =:= _->
             empty_set();
         _XFun
             when is_list(Type)->
@@ -1166,7 +1166,7 @@ partition(SetFun,S1,S2)
     SL1 = S1#'Set'.data,
     case external_fun(SetFun) of
         false
-            when Type2 =:= '_'->
+            when Type2 =:= _->
             {S2,S1};
         false->
             case subst(SL1,SetFun,element_type(Type1)) of
@@ -1183,7 +1183,7 @@ partition(SetFun,S1,S2)
                     error(Bad)
             end;
         _
-            when Type1 =:= '_'->
+            when Type1 =:= _->
             {S1,S1};
         _XFun
             when is_list(Type1)->
@@ -1212,7 +1212,7 @@ multiple_relative_product(T,R)
     is_record(R,'Set')->
     case test_rel(R,tuple_size(T),eq) of
         true
-            when R#'Set'.type =:= '_'->
+            when R#'Set'.type =:= _->
             empty_set();
         true->
             MProd = mul_relprod(tuple_to_list(T),1,R),
@@ -1232,10 +1232,10 @@ join(R1,I1,R2,I2)
         false->
             error(badarg);
         true
-            when R1#'Set'.type =:= '_'->
+            when R1#'Set'.type =:= _->
             R1;
         true
-            when R2#'Set'.type =:= '_'->
+            when R2#'Set'.type =:= _->
             R2;
         true->
             L1 = (raise_element(R1,I1))#'Set'.data,
@@ -1265,7 +1265,7 @@ test_rel(R,I,C) ->
             I >= 1,
             I =< tuple_size(Rel)->
             true;
-        '_'->
+        _->
             true;
         _->
             false
@@ -1283,7 +1283,7 @@ family_to_relation(F)
     case F#'Set'.type of
         {DT,[RT]}->
             #'Set'{data = family2rel(F#'Set'.data,[]),type = {DT,RT}};
-        '_'->
+        _->
             F;
         _->
             error(badarg)
@@ -1308,7 +1308,7 @@ family_specification(Fun,F)
                 Bad->
                     error(Bad)
             end;
-        '_'->
+        _->
             F;
         _->
             error(badarg)
@@ -1321,7 +1321,7 @@ union_of_family(F)
     case F#'Set'.type of
         {_DT,[Type]}->
             #'Set'{data = un_of_fam(F#'Set'.data,[]),type = Type};
-        '_'->
+        _->
             F;
         _->
             error(badarg)
@@ -1351,7 +1351,7 @@ family_union(F)
     case F#'Set'.type of
         {DT,[[Type]]}->
             #'Set'{data = fam_un(F#'Set'.data,[]),type = {DT,[Type]}};
-        '_'->
+        _->
             F;
         _->
             error(badarg)
@@ -1370,7 +1370,7 @@ family_intersection(F)
                 Bad->
                     error(Bad)
             end;
-        '_'->
+        _->
             F;
         _->
             error(badarg)
@@ -1383,9 +1383,9 @@ family_domain(F)
     case F#'Set'.type of
         {FDT,[{DT,_}]}->
             #'Set'{data = fam_dom(F#'Set'.data,[]),type = {FDT,[DT]}};
-        '_'->
+        _->
             F;
-        {_,['_']}->
+        {_,[_]}->
             F;
         _->
             error(badarg)
@@ -1398,9 +1398,9 @@ family_range(F)
     case F#'Set'.type of
         {DT,[{_,RT}]}->
             #'Set'{data = fam_ran(F#'Set'.data,[]),type = {DT,[RT]}};
-        '_'->
+        _->
             F;
-        {_,['_']}->
+        {_,[_]}->
             F;
         _->
             error(badarg)
@@ -1432,7 +1432,7 @@ fam_binop(F1,F2,FF)
     case unify_types(F1#'Set'.type,F2#'Set'.type) of
         []->
             error(type_mismatch);
-        '_'->
+        _->
             F1;
         Type = {_,[_]}->
             #'Set'{data = FF(F1#'Set'.data,F2#'Set'.data,[]),type = Type};
@@ -1473,7 +1473,7 @@ partition_family(SetFun,Set)
         false->
             empty_set();
         _
-            when Type =:= '_'->
+            when Type =:= _->
             empty_set();
         _XFun
             when is_list(Type)->
@@ -1501,7 +1501,7 @@ family_projection(SetFun,F)
         {DT,[Type]}->
             case external_fun(SetFun) of
                 false->
-                    case fam_proj(F#'Set'.data,SetFun,Type,'_',[]) of
+                    case fam_proj(F#'Set'.data,SetFun,Type,_,[]) of
                         {SL,NewType}->
                             #'Set'{data = SL,type = {DT,NewType}};
                         Bad->
@@ -1510,7 +1510,7 @@ family_projection(SetFun,F)
                 _->
                     error(badarg)
             end;
-        '_'->
+        _->
             F;
         _->
             error(badarg)
@@ -1523,7 +1523,7 @@ family_to_digraph(F)
     case F#'Set'.type of
         {_,[_]}->
             fam2digraph(F,digraph:new());
-        '_'->
+        _->
             digraph:new();
         _Else->
             error(badarg)
@@ -1536,7 +1536,7 @@ family_to_digraph(F,Type)
     case F#'Set'.type of
         {_,[_]}->
             ok;
-        '_'->
+        _->
             ok;
         _Else->
             error(badarg)
@@ -1589,7 +1589,7 @@ is_types(I,T) ->
             false
     end.
 
-is_element_type('_') ->
+is_element_type(_) ->
     true;
 is_element_type(T) ->
     is_type(T).
@@ -1660,7 +1660,7 @@ rel([],L,_Sz,Type) ->
 rel_type([E| Ts],L,Type) ->
     {NType,NE} = make_element(E,Type,Type),
     rel_type(Ts,[NE| L],NType);
-rel_type([],[],'_') ->
+rel_type([],[],_) ->
     empty_set();
 rel_type([],SL,Type)
     when is_tuple(Type)->
@@ -1724,7 +1724,7 @@ fam2([],_I0,SL,Type) ->
 func_type([E| T],SL,Type,F) ->
     {NType,NE} = make_element(E,Type,Type),
     func_type(T,[NE| SL],NType,F);
-func_type([],[],'_',_F) ->
+func_type([],[],_,_F) ->
     empty_set();
 func_type([],SL,Type,F) ->
     true = F(Type),
@@ -1733,7 +1733,7 @@ func_type([],SL,Type,F) ->
 
 setify(L,[Atom])
     when is_atom(Atom),
-    Atom =/= '_'->
+    Atom =/= _->
     #'Set'{data = usort(L),type = Atom};
 setify(L,[Type0]) ->
     try is_no_lists(Type0) of 
@@ -1771,9 +1771,9 @@ create([E| Es],T,T0,L) ->
 create([],T,_T0,L) ->
     {[T],usort(L)}.
 
-make_element(C,'_',_T0) ->
+make_element(C,_,_T0) ->
     make_element(C);
-make_element(C,Atom,'_')
+make_element(C,Atom,_)
     when is_atom(Atom),
      not is_list(C),
      not is_tuple(C)->
@@ -1781,21 +1781,21 @@ make_element(C,Atom,'_')
 make_element(C,Atom,Atom)
     when is_atom(Atom)->
     {Atom,C};
-make_element(T,TT,'_')
+make_element(T,TT,_)
     when tuple_size(T) =:= tuple_size(TT)->
-    make_tuple(tuple_to_list(T),tuple_to_list(TT),[],[],'_');
+    make_tuple(tuple_to_list(T),tuple_to_list(TT),[],[],_);
 make_element(T,TT,T0)
     when tuple_size(T) =:= tuple_size(TT)->
     make_tuple(tuple_to_list(T),tuple_to_list(TT),[],[],tuple_to_list(T0));
-make_element(L,[LT],'_')
+make_element(L,[LT],_)
     when is_list(L)->
-    create(L,LT,'_',[]);
+    create(L,LT,_,[]);
 make_element(L,[LT],[T0])
     when is_list(L)->
     create(L,LT,T0,[]).
 
 make_tuple([E| Es],[T| Ts],NT,L,T0)
-    when T0 =:= '_'->
+    when T0 =:= _->
     {ET,ES} = make_element(E,T,T0),
     make_tuple(Es,Ts,[ET| NT],[ES| L],T0);
 make_tuple([E| Es],[T| Ts],NT,L,[T0| T0s]) ->
@@ -1814,7 +1814,7 @@ make_element(T)
     make_tuple(tuple_to_list(T),[],[]);
 make_element(L)
     when is_list(L)->
-    create(L,'_','_',[]).
+    create(L,_,_,[]).
 
 make_tuple([E| Es],T,L) ->
     {ET,ES} = make_element(E),
@@ -2164,7 +2164,7 @@ relprod(B0,Bx0,By0,A0,L,_Ax,_B,_Ay) ->
 relprod_n([],_R,_EmptyG,_IsR) ->
     {error,badarg};
 relprod_n(RL,R,EmptyR,IsR) ->
-    case domain_type(RL,'_') of
+    case domain_type(RL,_) of
         Error = {error,_Reason}->
             Error;
         DType->
@@ -2173,8 +2173,8 @@ relprod_n(RL,R,EmptyR,IsR) ->
             Type = {DType,RType},
             Prod = case Empty of
                 true
-                    when DType =:= '_';
-                    RType =:= '_'->
+                    when DType =:= _;
+                    RType =:= _->
                     empty_set();
                 true->
                     #'Set'{data = [],type = Type};
@@ -2220,7 +2220,7 @@ domain_type([T| Ts],T0)
                 T1->
                     domain_type(Ts,T1)
             end;
-        '_'->
+        _->
             domain_type(Ts,T0);
         _->
             {error,badarg}
@@ -2232,8 +2232,8 @@ range_type([T| Ts],L) ->
     case T#'Set'.type of
         {_DT,RT}->
             range_type(Ts,[RT| L]);
-        '_'->
-            '_'
+        _->
+            _
     end;
 range_type([],L) ->
     list_to_tuple(reverse(L)).
@@ -2510,7 +2510,7 @@ element_type(Type) ->
     Type.
 
 subst(Ts,Fun,Type) ->
-    subst(Ts,Fun,Type,'_',[]).
+    subst(Ts,Fun,Type,_,[]).
 
 subst([T| Ts],Fun,Type,NType,L) ->
     case setfun(T,Fun,Type,NType) of
@@ -2920,7 +2920,7 @@ has_hole(Is,_I) ->
     Is =/= [].
 
 check_for_sort(T,_I)
-    when T =:= '_'->
+    when T =:= _->
     empty;
 check_for_sort(T,I)
     when is_tuple(T),
@@ -2946,8 +2946,8 @@ sets_to_list(Ss) ->
 types([],L) ->
     list_to_tuple(reverse(L));
 types([S| _Ss],_L)
-    when S#'Set'.type =:= '_'->
-    '_';
+    when S#'Set'.type =:= _->
+    _;
 types([S| Ss],L) ->
     types(Ss,[S#'Set'.type| L]).
 
@@ -2959,9 +2959,9 @@ unify_types(Type1,Type2) ->
 unify_types1(Atom,Atom)
     when is_atom(Atom)->
     Atom;
-unify_types1('_',Type) ->
+unify_types1(_,Type) ->
     Type;
-unify_types1(Type,'_') ->
+unify_types1(Type,_) ->
     Type;
 unify_types1([Type1],[Type2]) ->
     [unify_types1(Type1,Type2)];
@@ -2985,9 +2985,9 @@ match_types(Type1,Type2) ->
 match_types1(Atom,Atom)
     when is_atom(Atom)->
     true;
-match_types1('_',_) ->
+match_types1(_,_) ->
     true;
-match_types1(_,'_') ->
+match_types1(_,_) ->
     true;
 match_types1([Type1],[Type2]) ->
     match_types1(Type1,Type2);

@@ -3,6 +3,7 @@
 
 module Erlang.Pretty where
 
+import Data.Char
 import Data.Functor.Foldable
 import Data.Text (Text)
 import Erlang.Type
@@ -14,7 +15,26 @@ instance Pretty Var where
   pretty (Var s) = text s
 
 instance Pretty Atom where
-  pretty (Atom s) = text s
+  pretty (Atom "_") = text "_"
+  pretty (Atom "") = text ""
+  pretty (Atom s) =
+    if s `notElem` keyWord && isLower (head s) && all (`notElem` escapeChar) s
+      then text s
+      else quotes (text $ concatMap handleEc s)
+
+keyWord = ["after", "begin", "case", "try", "catch", "end", "fun", "if", "of", "receive", "when", "andalso", "orelse", "bnot", "not", "div", "rem", "band", "and", "bor", "bxor", "bsl", "bsr", "or", "xor" ]
+
+escapeChar =
+  [ '\b',
+    '\f',
+    '\n',
+    '\r',
+    '\t',
+    '\v',
+    '\"',
+    '\'',
+    '\\'
+  ]
 
 instance Pretty Forms where
   pretty (Forms0 f) = pretty f
@@ -389,10 +409,10 @@ instance Pretty FunClause where
 
 instance Pretty TryExpr where
   pretty (TryExpr0 a b c) = "try " <> pretty a <> " of " <> cr <> nest 4 (pretty b <> cr <> pretty c)
-  pretty (TryExpr1 a b) = "try " <> pretty a <> cr <> nest 4 ( pretty b)
+  pretty (TryExpr1 a b) = "try " <> pretty a <> cr <> nest 4 (pretty b)
 
 instance Pretty TryCatch where
-  pretty (TryCatch0 t) = "catch" <> cr <>  nest 4 (pretty t) <> " end"
+  pretty (TryCatch0 t) = "catch" <> cr <> nest 4 (pretty t) <> " end"
   pretty (TryCatch1 t e) = "catch" <> cr <> nest 4 (pretty t) <> " after " <> pretty e <> " end"
   pretty (TryCatch2 e) = "after " <> pretty e <> " end"
 
@@ -433,7 +453,7 @@ instance Pretty Guard where
   pretty (Guard0 e) = pretty e
   pretty (Guard1 e es) = pretty e <> ";" <> cr <> pretty es
 
-handleEc :: HasChars a => Char -> Doc a
+handleEc :: Char -> String
 handleEc '\b' = "\\b"
 handleEc '\f' = "\\f"
 handleEc '\n' = "\\n"
@@ -443,10 +463,10 @@ handleEc '\v' = "\\v"
 handleEc '\"' = "\\\""
 handleEc '\'' = "\\\'"
 handleEc '\\' = "\\\\"
-handleEc e = char e
+handleEc e = [e]
 
 instance Pretty Atomic where
-  pretty (Atomic0 c) = "$" <> handleEc c
+  pretty (Atomic0 c) = "$" <> text (handleEc c)
   pretty (Atomic1 i) = text $ show i
   pretty (Atomic11 i) = text i
   pretty (Atomic2 i) = text $ show i
@@ -454,8 +474,8 @@ instance Pretty Atomic where
   pretty (Atomic4 i) = pretty i
 
 instance Pretty Strings where
-  pretty (Strings0 s) = text s
-  pretty (Strings1 s ss) = text s <> space <> pretty ss
+  pretty (Strings0 s) = doubleQuotes (text s)
+  pretty (Strings1 s ss) = doubleQuotes (text s) <> space <> pretty ss
 
 instance Pretty PrefixOp where
   pretty PPlus = "+"

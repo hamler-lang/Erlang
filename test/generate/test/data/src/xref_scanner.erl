@@ -6,15 +6,15 @@
 
 -record(xref, {version = 1,mode = functions,variables = not_set_up,modules = dict:new(),applications = dict:new(),releases = dict:new(),library_path = [],libraries = dict:new(),builtins_default = false,recurse_default = false,verbose_default = false,warnings_default = true}).
 
--record(xref_mod, {name = '',app_name = [],dir = "",mtime,builtins,info,no_unresolved = 0,data}).
+-record(xref_mod, {name = ,app_name = [],dir = "",mtime,builtins,info,no_unresolved = 0,data}).
 
--record(xref_app, {name = '',rel_name = [],vsn = [],dir = ""}).
+-record(xref_app, {name = ,rel_name = [],vsn = [],dir = ""}).
 
--record(xref_rel, {name = '',dir = ""}).
+-record(xref_rel, {name = ,dir = ""}).
 
--record(xref_lib, {name = '',dir = ""}).
+-record(xref_lib, {name = ,dir = ""}).
 
--record(xref_var, {name = '',value,vtype,otype,type}).
+-record(xref_var, {name = ,value,vtype,otype,type}).
 
 -file("xref_scanner.erl", 24).
 

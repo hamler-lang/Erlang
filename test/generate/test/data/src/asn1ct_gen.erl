@@ -113,7 +113,7 @@ pgen(OutFile,#gen{options = Options} = Gen,Code) ->
     ok.
 
 dialyzer_suppressions(Erules) ->
-    emit([nl, {asis,'dialyzer-suppressions'}, "(Arg) ->", nl]),
+    emit([nl, {asis,dialyzer-suppressions}, "(Arg) ->", nl]),
     Rtmod = ct_gen_module(Erules),
     Rtmod:dialyzer_suppressions(Erules).
 
@@ -619,7 +619,7 @@ gen_decode_constructed(Erules,Typename,InnerType,D)
 pgen_exports(#gen{options = Options} = Gen,Code) ->
     #abst{types = Types,values = Values,objects = Objects,objsets = ObjectSets} = Code,
     emit(["-export([encoding_rule/0,maps/0,bit_string_format/0,", nl, "         legacy_erlang_types/0]).", nl]),
-    emit(["-export([", {asis,'dialyzer-suppressions'}, "/1]).", nl]),
+    emit(["-export([", {asis,dialyzer-suppressions}, "/1]).", nl]),
     case Gen of
         #gen{erule = ber}->
             gen_exports(Types,"enc_",2),

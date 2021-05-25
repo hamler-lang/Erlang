@@ -5,65 +5,65 @@
 -export([start/0, start/1, start/2, start/3, stop/0, stop/1, stop/2, stop/3, restart/0, restart/1, restart/2, restart/3, pause/0, pause/1, pause/2, pause/3, analyse/0, analyse/1, analyse/2, analyze/0, analyze/1, analyze/2]).
 
 start() ->
-    tr({'_','_','_'},true) + tr(on_load,true).
+    tr({_,_,_},true) + tr(on_load,true).
 
 start({_,_,_} = MFA) ->
     tr(MFA,true);
 start({FuncSpec}) ->
     tr(FuncSpec,true);
 start(M) ->
-    tr({M,'_','_'},true).
+    tr({M,_,_},true).
 
 start(M,F) ->
-    tr({M,F,'_'},true).
+    tr({M,F,_},true).
 
 start(M,F,A) ->
     tr({M,F,A},true).
 
 stop() ->
-    tr({'_','_','_'},false) + tr(on_load,false).
+    tr({_,_,_},false) + tr(on_load,false).
 
 stop({_,_,_} = MFA) ->
     tr(MFA,false);
 stop({FuncSpec}) ->
     tr(FuncSpec,false);
 stop(M) ->
-    tr({M,'_','_'},false).
+    tr({M,_,_},false).
 
 stop(M,F) ->
-    tr({M,F,'_'},false).
+    tr({M,F,_},false).
 
 stop(M,F,A) ->
     tr({M,F,A},false).
 
 restart() ->
-    tr({'_','_','_'},restart).
+    tr({_,_,_},restart).
 
 restart({_,_,_} = MFA) ->
     tr(MFA,restart);
 restart({FuncSpec}) ->
     tr(FuncSpec,restart);
 restart(M) ->
-    tr({M,'_','_'},restart).
+    tr({M,_,_},restart).
 
 restart(M,F) ->
-    tr({M,F,'_'},restart).
+    tr({M,F,_},restart).
 
 restart(M,F,A) ->
     tr({M,F,A},restart).
 
 pause() ->
-    tr({'_','_','_'},pause) + tr(on_load,false).
+    tr({_,_,_},pause) + tr(on_load,false).
 
 pause({_,_,_} = MFA) ->
     tr(MFA,pause);
 pause({FuncSpec}) ->
     tr(FuncSpec,pause);
 pause(M) ->
-    tr({M,'_','_'},pause).
+    tr({M,_,_},pause).
 
 pause(M,F) ->
-    tr({M,F,'_'},pause).
+    tr({M,F,_},pause).
 
 pause(M,F,A) ->
     tr({M,F,A},pause).

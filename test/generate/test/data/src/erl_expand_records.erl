@@ -63,7 +63,7 @@ clauses([],St) ->
 head(As,St) ->
     pattern_list(As,St).
 
-pattern({var,_,'_'} = Var,St) ->
+pattern({var,_,_} = Var,St) ->
     {Var,St};
 pattern({var,_,_} = Var,St) ->
     {Var,St};
@@ -537,7 +537,7 @@ strict_get_record_field(Line,R,{atom,_,F} = Index,Name,St0) ->
             P = record_pattern(2,I,Var,length(Fs) + 1,Line,[{atom,Line,Name}]),
             NLine = no_compiler_warning(Line),
             RLine = mark_record(NLine,St),
-            E = {'case',NLine,R,[{clause,NLine,[{tuple,RLine,P}],[],[Var]}, {clause,NLine,[{var,NLine,'_'}],[],[{call,NLine,{remote,NLine,{atom,NLine,erlang},{atom,NLine,error}},[{tuple,NLine,[{atom,NLine,badrecord}, {atom,NLine,Name}]}]}]}]},
+            E = {'case',NLine,R,[{clause,NLine,[{tuple,RLine,P}],[],[Var]}, {clause,NLine,[{var,NLine,_}],[],[{call,NLine,{remote,NLine,{atom,NLine,erlang},{atom,NLine,error}},[{tuple,NLine,[{atom,NLine,badrecord}, {atom,NLine,Name}]}]}]}]},
             expr(E,St);
         true->
             Fs = record_fields(Name,St0),
@@ -555,7 +555,7 @@ record_pattern(I,I,Var,Sz,Line,Acc) ->
     record_pattern(I + 1,I,Var,Sz,Line,[Var| Acc]);
 record_pattern(Cur,I,Var,Sz,Line,Acc)
     when Cur =< Sz->
-    record_pattern(Cur + 1,I,Var,Sz,Line,[{var,Line,'_'}| Acc]);
+    record_pattern(Cur + 1,I,Var,Sz,Line,[{var,Line,_}| Acc]);
 record_pattern(_,_,_,_,_,Acc) ->
     reverse(Acc).
 
@@ -590,7 +590,7 @@ pattern_fields(Fs,Ms) ->
                 Match;
             error
                 when Wildcard =:= none->
-                {var,L,'_'};
+                {var,L,_};
             error->
                 Wildcard
         end end,Fs).
@@ -608,7 +608,7 @@ record_inits(Fs,Is) ->
                 WildcardInit
         end end,Fs).
 
-record_wildcard_init([{record_field,_,{var,_,'_'},D}| _]) ->
+record_wildcard_init([{record_field,_,{var,_,_},D}| _]) ->
     D;
 record_wildcard_init([_| Is]) ->
     record_wildcard_init(Is);
@@ -634,7 +634,7 @@ record_match(R,Name,Lr,Fs,Us,St0) ->
     {Ps,News,St1} = record_upd_fs(Fs,Us,St0),
     NLr = no_compiler_warning(Lr),
     RLine = mark_record(Lr,St1),
-    {{'case',Lr,R,[{clause,Lr,[{tuple,RLine,[{atom,Lr,Name}| Ps]}],[],[{tuple,RLine,[{atom,Lr,Name}| News]}]}, {clause,NLr,[{var,NLr,'_'}],[],[call_error(NLr,{tuple,NLr,[{atom,NLr,badrecord}, {atom,NLr,Name}]})]}]},St1}.
+    {{'case',Lr,R,[{clause,Lr,[{tuple,RLine,[{atom,Lr,Name}| Ps]}],[],[{tuple,RLine,[{atom,Lr,Name}| News]}]}, {clause,NLr,[{var,NLr,_}],[],[call_error(NLr,{tuple,NLr,[{atom,NLr,badrecord}, {atom,NLr,Name}]})]}]},St1}.
 
 record_upd_fs([{record_field,Lf,{atom,_La,F},_Val}| Fs],Us,St0) ->
     {P,St1} = new_var(Lf,St0),
@@ -655,10 +655,10 @@ record_setel(R,Name,Fs,Us0) ->
     Us2 = sort(Us1),
     Us = [T || {_,T} <- Us2],
     Lr = element(2,hd(Us)),
-    Wildcards = duplicate(length(Fs),{var,Lr,'_'}),
+    Wildcards = duplicate(length(Fs),{var,Lr,_}),
     NLr = no_compiler_warning(Lr),
     {'case',Lr,R,[{clause,Lr,[{tuple,Lr,[{atom,Lr,Name}| Wildcards]}],[],[foldr(fun ({I,Lf,Val},Acc)->
-        {call,Lf,{remote,Lf,{atom,Lf,erlang},{atom,Lf,setelement}},[I, Acc, Val]} end,R,Us)]}, {clause,NLr,[{var,NLr,'_'}],[],[call_error(NLr,{tuple,NLr,[{atom,NLr,badrecord}, {atom,NLr,Name}]})]}]}.
+        {call,Lf,{remote,Lf,{atom,Lf,erlang},{atom,Lf,setelement}},[I, Acc, Val]} end,R,Us)]}, {clause,NLr,[{var,NLr,_}],[],[call_error(NLr,{tuple,NLr,[{atom,NLr,badrecord}, {atom,NLr,Name}]})]}]}.
 
 record_info_call(Line,[{atom,_Li,Info}, {atom,_Ln,Name}],St) ->
     case Info of

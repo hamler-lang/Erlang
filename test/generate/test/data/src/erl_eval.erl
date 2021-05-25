@@ -353,7 +353,7 @@ expr({call,_,{remote,_,{atom,_,qlc},{atom,_,q}},[{lc,_,_E,_Qs} = LC| As0]},Bs0,L
         {not_ok,Error}->
             ret_expr(Error,Bs0,RBs)
     end;
-expr({call,L1,{remote,L2,{record_field,_,{atom,_,''},{atom,_,qlc} = Mod},{atom,_,q} = Func},[{lc,_,_E,_Qs}| As0] = As},Bs,Lf,Ef,RBs)
+expr({call,L1,{remote,L2,{record_field,_,{atom,_,},{atom,_,qlc} = Mod},{atom,_,q} = Func},[{lc,_,_E,_Qs}| As0] = As},Bs,Lf,Ef,RBs)
     when length(As0) =< 1->
     expr({call,L1,{remote,L2,Mod,Func},As},Bs,Lf,Ef,RBs);
 expr({call,_,{remote,_,Mod,Func},As0},Bs0,Lf,Ef,RBs) ->
@@ -1013,7 +1013,7 @@ match1({char,_,C0},C,Bs,_BBs) ->
         _->
             throw(nomatch)
     end;
-match1({var,_,'_'},_,Bs,_BBs) ->
+match1({var,_,_},_,Bs,_BBs) ->
     {match,Bs};
 match1({var,_,Name},Term,Bs,_BBs) ->
     case binding(Name,Bs) of

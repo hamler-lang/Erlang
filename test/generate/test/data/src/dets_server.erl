@@ -153,7 +153,7 @@ handle_info({'EXIT',Pid,_Reason},State) ->
             true = ets:delete(dets_registry,Tab),
             true = ets:delete(dets_owners,Pid),
             Users = ets:select(State#state.store,[{{'$1',Tab},[],['$1']}]),
-            true = ets:match_delete(Store,{'_',Tab}),
+            true = ets:match_delete(Store,{_,Tab}),
             lists:foreach(fun (User)->
                 do_unlink(Store,User) end,Users),
             {noreply,State};

@@ -492,7 +492,7 @@ aux_name1(Name,N,AllNames) ->
     end.
 
 var_fold(F,A,{var,_,V} = Var)
-    when V =/= '_'->
+    when V =/= _->
     [F(Var)| A];
 var_fold(F,A,T)
     when is_tuple(T)->

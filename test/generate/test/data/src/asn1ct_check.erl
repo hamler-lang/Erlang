@@ -928,7 +928,7 @@ check_ObjectSetFromObjects(S,ObjName,Fields) ->
         #'ObjectSet'{} = Obj1->
             get_fieldname_set(S,Obj1,Fields);
         #'Object'{classname = Class,def = {object,_,ObjFs}}->
-            ObjSet = #'ObjectSet'{class = Class,set = [{'_','_',ObjFs}]},
+            ObjSet = #'ObjectSet'{class = Class,set = [{_,_,ObjFs}]},
             get_fieldname_set(S,ObjSet,Fields)
     end.
 
@@ -1285,7 +1285,7 @@ match_syntax_type(S,{objectfield,Name,_,_,_},#'Externalvaluereference'{} = Ref) 
     check_object(S,Obj,object_to_check(S,Obj)),
     {match,[{Name,Ref#'Externalvaluereference'{module = M}}]};
 match_syntax_type(S,{objectfield,Name,Class,_,_},{object,_,_} = ObjDef) ->
-    InlinedObjName = list_to_atom(lists:concat([S#state.tname, '_', Name])),
+    InlinedObjName = list_to_atom(lists:concat([S#state.tname, _, Name])),
     ObjSpec = #'Object'{classname = Class,def = ObjDef},
     CheckedObj = check_object(S,#typedef{typespec = ObjSpec},ObjSpec),
     InlObj = #typedef{checked = true,name = InlinedObjName,typespec = CheckedObj},
@@ -1743,7 +1743,7 @@ get_oid_type(_S,_,'INTEGER' = T) ->
 get_oid_type(S,OidType,_) ->
     asn1_error(S,{illegal_oid,OidType}).
 
-reserved_objectid('itu-t',[]) ->
+reserved_objectid(itu-t,[]) ->
     0;
 reserved_objectid(ccitt,[]) ->
     0;
@@ -1753,9 +1753,9 @@ reserved_objectid(question,[0]) ->
     1;
 reserved_objectid(administration,[0]) ->
     2;
-reserved_objectid('network-operator',[0]) ->
+reserved_objectid(network-operator,[0]) ->
     3;
-reserved_objectid('identified-organization',[0]) ->
+reserved_objectid(identified-organization,[0]) ->
     4;
 reserved_objectid(a,[0, 0]) ->
     1;
@@ -1813,13 +1813,13 @@ reserved_objectid(iso,[]) ->
     1;
 reserved_objectid(standard,[1]) ->
     0;
-reserved_objectid('member-body',[1]) ->
+reserved_objectid(member-body,[1]) ->
     2;
-reserved_objectid('identified-organization',[1]) ->
+reserved_objectid(identified-organization,[1]) ->
     3;
-reserved_objectid('joint-iso-itu-t',[]) ->
+reserved_objectid(joint-iso-itu-t,[]) ->
     2;
-reserved_objectid('joint-iso-ccitt',[]) ->
+reserved_objectid(joint-iso-ccitt,[]) ->
     2;
 reserved_objectid(_,_) ->
     false.
@@ -1853,18 +1853,18 @@ convert_external(S,Vtype,Value) ->
     end.
 
 to_EXTERNAL1990(S,[{#seqtag{val = identification} = T,{'CHOICE',{syntax,Stx}}}| Rest]) ->
-    to_EXTERNAL1990(S,Rest,[{T#seqtag{val = 'direct-reference'},Stx}]);
-to_EXTERNAL1990(S,[{#seqtag{val = identification} = T,{'CHOICE',{'presentation-context-id',I}}}| Rest]) ->
-    to_EXTERNAL1990(S,Rest,[{T#seqtag{val = 'indirect-reference'},I}]);
-to_EXTERNAL1990(S,[{#seqtag{val = identification} = T,{'CHOICE',{'context-negotiation',[{_,PCid}, {_,TrStx}]}}}| Rest]) ->
-    to_EXTERNAL1990(S,Rest,[{T#seqtag{val = 'indirect-reference'},PCid}, {T#seqtag{val = 'direct-reference'},TrStx}]);
+    to_EXTERNAL1990(S,Rest,[{T#seqtag{val = direct-reference},Stx}]);
+to_EXTERNAL1990(S,[{#seqtag{val = identification} = T,{'CHOICE',{presentation-context-id,I}}}| Rest]) ->
+    to_EXTERNAL1990(S,Rest,[{T#seqtag{val = indirect-reference},I}]);
+to_EXTERNAL1990(S,[{#seqtag{val = identification} = T,{'CHOICE',{context-negotiation,[{_,PCid}, {_,TrStx}]}}}| Rest]) ->
+    to_EXTERNAL1990(S,Rest,[{T#seqtag{val = indirect-reference},PCid}, {T#seqtag{val = direct-reference},TrStx}]);
 to_EXTERNAL1990(S,_) ->
     asn1_error(S,illegal_external_value).
 
-to_EXTERNAL1990(S,[V = {#seqtag{val = 'data-value-descriptor'},_}| Rest],Acc) ->
+to_EXTERNAL1990(S,[V = {#seqtag{val = data-value-descriptor},_}| Rest],Acc) ->
     to_EXTERNAL1990(S,Rest,[V| Acc]);
-to_EXTERNAL1990(_S,[{#seqtag{val = 'data-value'} = T,Val}],Acc) ->
-    Encoding = {T#seqtag{val = encoding},{'CHOICE',{'octet-aligned',Val}}},
+to_EXTERNAL1990(_S,[{#seqtag{val = data-value} = T,Val}],Acc) ->
+    Encoding = {T#seqtag{val = encoding},{'CHOICE',{octet-aligned,Val}}},
     lists:reverse([Encoding| Acc]);
 to_EXTERNAL1990(S,_,_) ->
     asn1_error(S,illegal_external_value).
@@ -3737,7 +3737,7 @@ iof_associated_type1(S,C) ->
     TypeIdentifierRef = #'Externaltypereference'{module = ModuleName,type = 'TYPE-IDENTIFIER'},
     ObjectIdentifier = #'ObjectClassFieldType'{classname = TypeIdentifierRef,class = [],fieldname = {id,[]},type = {fixedtypevaluefield,id,#type{def = 'OBJECT IDENTIFIER'}}},
     Typefield = #'ObjectClassFieldType'{classname = TypeIdentifierRef,class = [],fieldname = {'Type',[]},type = Typefield_type},
-    IOFComponents0 = [#'ComponentType'{name = 'type-id',typespec = #type{tag = C1TypeTag,def = ObjectIdentifier,constraint = Comp1Cnstr},prop = mandatory,tags = ObjIdTag}, #'ComponentType'{name = value,typespec = #type{tag = [#tag{class = 'CONTEXT',number = 0,type = 'EXPLICIT',form = 32}],def = Typefield,constraint = Comp2Cnstr,tablecinf = Comp2tablecinf},prop = mandatory,tags = [{'CONTEXT',0}]}],
+    IOFComponents0 = [#'ComponentType'{name = type-id,typespec = #type{tag = C1TypeTag,def = ObjectIdentifier,constraint = Comp1Cnstr},prop = mandatory,tags = ObjIdTag}, #'ComponentType'{name = value,typespec = #type{tag = [#tag{class = 'CONTEXT',number = 0,type = 'EXPLICIT',form = 32}],def = Typefield,constraint = Comp2Cnstr,tablecinf = Comp2tablecinf},prop = mandatory,tags = [{'CONTEXT',0}]}],
     IOFComponents = textual_order(IOFComponents0),
     #'SEQUENCE'{tablecinf = TableCInf,components = simplify_comps(IOFComponents)}.
 
@@ -3753,7 +3753,7 @@ instance_of_constraints_1(S,Type) ->
     ObjectSetRef = #'Externaltypereference'{module = ModuleName,type = Name},
     CRel = [{componentrelation,{objectset,undefined,ObjectSetRef},[{innermost,[#'Externalvaluereference'{module = ModuleName,value = type}]}]}],
     Mod = S#state.mname,
-    TableCInf = #simpletableattributes{objectsetname = {Mod,Name},c_name = 'type-id',c_index = 1,usedclassfield = id,uniqueclassfield = id,valueindex = []},
+    TableCInf = #simpletableattributes{objectsetname = {Mod,Name},c_name = type-id,c_index = 1,usedclassfield = id,uniqueclassfield = id,valueindex = []},
     {TableCInf,[{simpletable,Name}],CRel,[{objfun,ObjectSetRef}]}.
 
 check_enumerated(_S,[{Name,Number}| _] = NNL)
@@ -5118,16 +5118,16 @@ include_default_type1(Module,[{Name,TS}| Rest]) ->
 
 default_type_list() ->
     Syntax = #'ComponentType'{name = syntax,typespec = #type{def = 'OBJECT IDENTIFIER'},prop = mandatory},
-    Presentation_Cid = #'ComponentType'{name = 'presentation-context-id',typespec = #type{def = 'INTEGER'},prop = mandatory},
-    Transfer_syntax = #'ComponentType'{name = 'transfer-syntax',typespec = #type{def = 'OBJECT IDENTIFIER'},prop = mandatory},
+    Presentation_Cid = #'ComponentType'{name = presentation-context-id,typespec = #type{def = 'INTEGER'},prop = mandatory},
+    Transfer_syntax = #'ComponentType'{name = transfer-syntax,typespec = #type{def = 'OBJECT IDENTIFIER'},prop = mandatory},
     Negotiation_items = #type{def = #'SEQUENCE'{components = [Presentation_Cid, Transfer_syntax#'ComponentType'{prop = mandatory}]}},
-    Context_negot = #'ComponentType'{name = 'context-negotiation',typespec = Negotiation_items,prop = mandatory},
-    Data_value_descriptor = #'ComponentType'{name = 'data-value-descriptor',typespec = #type{def = 'ObjectDescriptor'},prop = 'OPTIONAL'},
-    Data_value = #'ComponentType'{name = 'data-value',typespec = #type{def = 'OCTET STRING'},prop = mandatory},
-    Direct_reference = #'ComponentType'{name = 'direct-reference',typespec = #type{def = 'OBJECT IDENTIFIER'},prop = 'OPTIONAL',tags = [{'UNIVERSAL',6}]},
-    Indirect_reference = #'ComponentType'{name = 'indirect-reference',typespec = #type{def = 'INTEGER'},prop = 'OPTIONAL',tags = [{'UNIVERSAL',2}]},
-    Single_ASN1_type = #'ComponentType'{name = 'single-ASN1-type',typespec = #type{tag = [{tag,'CONTEXT',0,'EXPLICIT',32}],def = 'ANY'},prop = mandatory,tags = [{'CONTEXT',0}]},
-    Octet_aligned = #'ComponentType'{name = 'octet-aligned',typespec = #type{tag = [{tag,'CONTEXT',1,'IMPLICIT',0}],def = 'OCTET STRING'},prop = mandatory,tags = [{'CONTEXT',1}]},
+    Context_negot = #'ComponentType'{name = context-negotiation,typespec = Negotiation_items,prop = mandatory},
+    Data_value_descriptor = #'ComponentType'{name = data-value-descriptor,typespec = #type{def = 'ObjectDescriptor'},prop = 'OPTIONAL'},
+    Data_value = #'ComponentType'{name = data-value,typespec = #type{def = 'OCTET STRING'},prop = mandatory},
+    Direct_reference = #'ComponentType'{name = direct-reference,typespec = #type{def = 'OBJECT IDENTIFIER'},prop = 'OPTIONAL',tags = [{'UNIVERSAL',6}]},
+    Indirect_reference = #'ComponentType'{name = indirect-reference,typespec = #type{def = 'INTEGER'},prop = 'OPTIONAL',tags = [{'UNIVERSAL',2}]},
+    Single_ASN1_type = #'ComponentType'{name = single-ASN1-type,typespec = #type{tag = [{tag,'CONTEXT',0,'EXPLICIT',32}],def = 'ANY'},prop = mandatory,tags = [{'CONTEXT',0}]},
+    Octet_aligned = #'ComponentType'{name = octet-aligned,typespec = #type{tag = [{tag,'CONTEXT',1,'IMPLICIT',0}],def = 'OCTET STRING'},prop = mandatory,tags = [{'CONTEXT',1}]},
     Arbitrary = #'ComponentType'{name = arbitrary,typespec = #type{tag = [{tag,'CONTEXT',2,'IMPLICIT',0}],def = {'BIT STRING',[]}},prop = mandatory,tags = [{'CONTEXT',2}]},
     Encoding = #'ComponentType'{name = encoding,typespec = #type{def = {'CHOICE',[Single_ASN1_type, Octet_aligned, Arbitrary]}},prop = mandatory},
     EXTERNAL_components1990 = [Direct_reference, Indirect_reference, Data_value_descriptor, Encoding],
@@ -5139,7 +5139,7 @@ default_type_list() ->
     Negotiations = [Syntaxes, Syntax, Presentation_Cid, Context_negot, Transfer_syntax, Fixed],
     Identification2 = #'ComponentType'{name = identification,typespec = #type{def = {'CHOICE',Negotiations}},prop = mandatory},
     EmbeddedPdv_components = [Identification2, Data_value],
-    String_value = #'ComponentType'{name = 'string-value',typespec = #type{def = 'OCTET STRING'},prop = mandatory},
+    String_value = #'ComponentType'{name = string-value,typespec = #type{def = 'OCTET STRING'},prop = mandatory},
     CharacterString_components = [Identification2, String_value],
     [{'EXTERNAL',#type{tag = [#tag{class = 'UNIVERSAL',number = 8,type = 'IMPLICIT',form = 32}],def = #'SEQUENCE'{components = EXTERNAL_components1990}}}, {'EMBEDDED PDV',#type{tag = [#tag{class = 'UNIVERSAL',number = 11,type = 'IMPLICIT',form = 32}],def = #'SEQUENCE'{components = EmbeddedPdv_components}}}, {'CHARACTER STRING',#type{tag = [#tag{class = 'UNIVERSAL',number = 29,type = 'IMPLICIT',form = 32}],def = #'SEQUENCE'{components = CharacterString_components}}}].
 

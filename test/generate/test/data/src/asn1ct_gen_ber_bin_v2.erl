@@ -750,7 +750,7 @@ gen_encode_field_call(ObjName,FieldName,Type) ->
             gen_encode_prim(ber,Def,{asis,lists:reverse(Tag)},"Val"),
             [];
         {constructed,bif}->
-            Name = lists:concat([ObjName, '_', FieldName]),
+            Name = lists:concat([ObjName, _, FieldName]),
             emit(["   ", {asis,enc_func(Name)}, "(Val,", {asis,Tag}, ")"]),
             [Type#typedef{name = list_to_atom(Name)}];
         {ExtMod,TypeName}->
@@ -768,7 +768,7 @@ gen_encode_default_call(ClassName,FieldName,Type) ->
     Tag = [(encode_tag_val(decode_class(X#tag.class),X#tag.form,X#tag.number)) || X <- OTag],
     case asn1ct_gen:type(InnerType) of
         {constructed,bif}->
-            Name = lists:concat([ClassName, '_', FieldName]),
+            Name = lists:concat([ClassName, _, FieldName]),
             emit(["   ", {asis,enc_func(Name)}, "(Val, ", {asis,Tag}, ")"]),
             [#typedef{name = list_to_atom(Name),typespec = Type}];
         {primitive,bif}->
@@ -916,8 +916,8 @@ gen_decode_default_call(ClassName,FieldName,Bytes,Type) ->
     Tag = [(decode_class(X#tag.class) bsl 10 + X#tag.number) || X <- OTag],
     case asn1ct_gen:type(InnerType) of
         {constructed,bif}->
-            emit(["   'dec_", ClassName, '_', FieldName, "'(", Bytes, ",", {asis,Tag}, ")"]),
-            [#typedef{name = list_to_atom(lists:concat([ClassName, '_', FieldName])),typespec = Type}];
+            emit(["   'dec_", ClassName, _, FieldName, "'(", Bytes, ",", {asis,Tag}, ")"]),
+            [#typedef{name = list_to_atom(lists:concat([ClassName, _, FieldName])),typespec = Type}];
         {primitive,bif}->
             gen_dec_prim(Type,Bytes,Tag),
             [];

@@ -573,7 +573,7 @@ find_uses([{Var,Form}| Constrs]) ->
 find_uses([]) ->
     [].
 
-form_vars({var,_,'_'},Vs) ->
+form_vars({var,_,_},Vs) ->
     Vs;
 form_vars({var,_,V},Vs) ->
     [V| Vs];
@@ -622,7 +622,7 @@ remove_uses(Var,Use,[Constr| Constrs]) ->
     [NewConstr| remove_uses(Var,Use,Constrs)].
 
 remove_use({var,L,V},V) ->
-    {var,L,'_'};
+    {var,L,_};
 remove_use(T,V)
     when is_tuple(T)->
     list_to_tuple(remove_use(tuple_to_list(T),V));

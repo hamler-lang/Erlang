@@ -454,7 +454,7 @@ warn_failing_qualifiers(Qualifiers,AllIVs,Dependencies,State) ->
     Warnings.
 
 opt_info(TemplateInfo,Sizes,JoinInfo,MSQs,L,EqColumnConstants0,EqualColumnConstants0) ->
-    SzCls = [{clause,L,[{integer,L,C}],[],[{integer,L,Sz}]} || {C,Sz} <- lists:sort(Sizes)] ++ [{clause,L,[{var,L,'_'}],[],[{atom,L,undefined}]}],
+    SzCls = [{clause,L,[{integer,L,C}],[],[{integer,L,Sz}]} || {C,Sz} <- lists:sort(Sizes)] ++ [{clause,L,[{var,L,_}],[],[{atom,L,undefined}]}],
     S = [{size,{'fun',L,{clauses,SzCls}}}],
     J = case JoinInfo of
         []->
@@ -463,7 +463,7 @@ opt_info(TemplateInfo,Sizes,JoinInfo,MSQs,L,EqColumnConstants0,EqualColumnConsta
             [{join,abstr(JoinInfo,L)}]
     end,
     TCls0 = lists:append([[{clause,L,[abstr(Col,L), EqType],[],[abstr(TemplCols,L)]} || {Col,TemplCols} <- TemplateColumns] || {EqType,TemplateColumns} <- TemplateInfo]),
-    TCls = lists:sort(TCls0) ++ [{clause,L,[{var,L,'_'}, {var,L,'_'}],[],[{nil,L}]}],
+    TCls = lists:sort(TCls0) ++ [{clause,L,[{var,L,_}, {var,L,_}],[],[{nil,L}]}],
     T = [{template,{'fun',L,{clauses,TCls}}}],
     EqColumnConstants = opt_column_constants(EqColumnConstants0),
     CCs = opt_constants(L,EqColumnConstants),
@@ -475,13 +475,13 @@ opt_info(TemplateInfo,Sizes,JoinInfo,MSQs,L,EqColumnConstants0,EqualColumnConsta
     ConstCols = [{IdNo,Col} || {{IdNo,Col},[_],_FilNs} <- EqualColumnConstants],
     ConstColsFamily = family_list(ConstCols),
     NSortedCols0 = [{IdNo,hd(lists:seq(1,length(Cols) + 1) -- Cols)} || {IdNo,Cols} <- ConstColsFamily],
-    NCls = [{clause,L,[{integer,L,IdNo}],[],[{integer,L,N - 1}]} || {IdNo,N} <- NSortedCols0,N > 0] ++ [{clause,L,[{var,L,'_'}],[],[{integer,L,0}]}],
+    NCls = [{clause,L,[{integer,L,IdNo}],[],[{integer,L,N - 1}]} || {IdNo,N} <- NSortedCols0,N > 0] ++ [{clause,L,[{var,L,_}],[],[{integer,L,0}]}],
     N = [{n_leading_constant_columns,{'fun',L,{clauses,NCls}}}],
-    ConstCls = [{clause,L,[{integer,L,IdNo}],[],[abstr(Cols,L)]} || {IdNo,Cols} <- ConstColsFamily] ++ [{clause,L,[{var,L,'_'}],[],[{nil,L}]}],
+    ConstCls = [{clause,L,[{integer,L,IdNo}],[],[abstr(Cols,L)]} || {IdNo,Cols} <- ConstColsFamily] ++ [{clause,L,[{var,L,_}],[],[{nil,L}]}],
     CC = [{constant_columns,{'fun',L,{clauses,ConstCls}}}],
-    MSCls = [{clause,L,[{integer,L,G}],[],[{tuple,L,[MS, abstr(Fs,L)]}]} || {G,MS,Fs} <- MSQs] ++ [{clause,L,[{var,L,'_'}],[],[{atom,L,undefined}]}],
+    MSCls = [{clause,L,[{integer,L,G}],[],[{tuple,L,[MS, abstr(Fs,L)]}]} || {G,MS,Fs} <- MSQs] ++ [{clause,L,[{var,L,_}],[],[{atom,L,undefined}]}],
     MS = [{match_specs,{'fun',L,{clauses,MSCls}}}],
-    Cls = [{clause,L,[{atom,L,Tag}],[],[V]} || {Tag,V} <- lists:append([J, S, T, C, N, CC, MS])] ++ [{clause,L,[{var,L,'_'}],[],[{atom,L,undefined}]}],
+    Cls = [{clause,L,[{atom,L,Tag}],[],[V]} || {Tag,V} <- lists:append([J, S, T, C, N, CC, MS])] ++ [{clause,L,[{var,L,_}],[],[{atom,L,undefined}]}],
     {'fun',L,{clauses,Cls}}.
 
 opt_column_constants(ColumnConstants0) ->
@@ -489,7 +489,7 @@ opt_column_constants(ColumnConstants0) ->
 
 opt_constants(L,ColumnConstants) ->
     Ns = lists:usort([IdNo || {{IdNo,_Col},_Const,_FilNs} <- ColumnConstants]),
-    [{clause,L,[{integer,L,IdNo}],[],[column_fun(ColumnConstants,IdNo,L)]} || IdNo <- Ns] ++ [{clause,L,[{var,L,'_'}],[],[{atom,L,no_column_fun}]}].
+    [{clause,L,[{integer,L,IdNo}],[],[column_fun(ColumnConstants,IdNo,L)]} || IdNo <- Ns] ++ [{clause,L,[{var,L,_}],[],[{atom,L,no_column_fun}]}].
 
 abstr(Term,Anno) ->
     erl_parse:abstract(Term,loc(Anno)).
@@ -538,7 +538,7 @@ anon_pattern(P) ->
             true->
                 {{var,L,V},A};
             false->
-                {{var,L,'_'},A}
+                {{var,L,_},A}
         end end,foo,P),
     AP.
 
@@ -554,9 +554,9 @@ join_handle(AP,L,[F, H, O, C],Constants) ->
                 G0;true ->
                 [G0] end,
             CC1 = {clause,L,[AP],G,[{cons,L,O,closure({call,L,F,[F, C]},L)}]},
-            CC2 = {clause,L,[{var,L,'_'}],[],[{call,L,F,[F, C]}]},
+            CC2 = {clause,L,[{var,L,_}],[],[{call,L,F,[F, C]}]},
             Case = {'case',L,O,[CC1, CC2]},
-            Cls = [{clause,L,[{var,L,'_'}, {nil,L}],[],[{nil,L}]}, {clause,L,[F, {cons,L,O,C}],[],[Case]}, {clause,L,[F, C],[[{call,L,{atom,L,is_function},[C]}]],[{call,L,F,[F, {call,L,C,[]}]}]}, {clause,L,[{var,L,'_'}, C],[],[C]}],
+            Cls = [{clause,L,[{var,L,_}, {nil,L}],[],[{nil,L}]}, {clause,L,[F, {cons,L,O,C}],[],[Case]}, {clause,L,[F, C],[[{call,L,{atom,L,is_function},[C]}]],[{call,L,F,[F, {call,L,C,[]}]}]}, {clause,L,[{var,L,_}, C],[],[C]}],
             Fun = {'fun',L,{clauses,Cls}},
             {'fun',L,{clauses,[{clause,L,[H],[],[{match,L,F,Fun}, closure({call,L,F,[F, H]},L)]}]}}
     end.
@@ -585,7 +585,7 @@ column_fun(Columns,QualifierNumber,LcL) ->
             values
     end,
     Vs = {tuple,A,[{atom,A,Tag}, Vs1, Fils1]},
-    {clause,A,[erl_parse:abstract(Col)],[],[Vs]} end || {{CIdNo,Col},Vs0,{FTag,Fils}} <- Columns,CIdNo =:= QualifierNumber] ++ [{clause,A,[{var,A,'_'}],[],[{atom,A,false}]}],
+    {clause,A,[erl_parse:abstract(Col)],[],[Vs]} end || {{CIdNo,Col},Vs0,{FTag,Fils}} <- Columns,CIdNo =:= QualifierNumber] ++ [{clause,A,[{var,A,_}],[],[{atom,A,false}]}],
     ColCls = set_anno(ColCls0,LcL),
     {'fun',LcL,{clauses,ColCls}}.
 
@@ -599,7 +599,7 @@ template_columns(Qs0,E0,AllIVs,Dependencies,State) ->
     Match = template_cols(MatchColumns),
     L = anno0(),
     if Match =:= Equal ->
-        [{{var,L,'_'},Match}];true ->
+        [{{var,L,_},Match}];true ->
         [{{atom,L,'=='},Equal}, {{atom,L,'=:='},Match}] end.
 
 equal_columns2(Qualifiers,AllIVs,Dependencies,State) ->
@@ -668,7 +668,7 @@ match_spec_quals(Template,Dependencies,Qualifiers,State) ->
     [{GNum,AbstrMS,all}]
         catch
             _:_->
-                {TemplVar,_} = anon_var({var,anno0(),'_'},0),
+                {TemplVar,_} = anon_var({var,anno0(),_},0),
                 [(one_gen_match_spec(GNum,Pattern,GFilterData,State,TemplVar)) || {{GNum,Pattern},GFilterData} <- GFFL] end.
 
 one_gen_match_spec(GNum,Pattern0,GFilterData,State,TemplVar) ->
@@ -685,13 +685,13 @@ gen_ms(E,Pattern,GFilterData,State) ->
             AMS
     end.
 
-pattern_as_template({var,_,'_'},TemplVar) ->
+pattern_as_template({var,_,_},TemplVar) ->
     {TemplVar,TemplVar};
 pattern_as_template({var,_,_} = V,_TemplVar) ->
     {V,V};
-pattern_as_template({match,L,E,{var,_,'_'}},TemplVar) ->
+pattern_as_template({match,L,E,{var,_,_}},TemplVar) ->
     {TemplVar,{match,L,E,TemplVar}};
-pattern_as_template({match,L,{var,_,'_'},E},TemplVar) ->
+pattern_as_template({match,L,{var,_,_},E},TemplVar) ->
     {TemplVar,{match,L,E,TemplVar}};
 pattern_as_template({match,_,_E,{var,_,_} = V} = P,_TemplVar) ->
     {V,P};
@@ -981,7 +981,7 @@ match_in_pattern(E,F,_BF) ->
     {E,F}.
 
 anon_var(E,AnonI) ->
-    var_mapfold(fun ({var,L,'_'},N)->
+    var_mapfold(fun ({var,L,_},N)->
         {{var,L,N},N + 1};(Var,N)->
         {Var,N} end,AnonI,E).
 
@@ -1618,12 +1618,12 @@ clauses([],_RL,_Fun,_Go,_NGV,_IVs,_E,_St) ->
     [].
 
 final(RL,IVs,L,State) ->
-    IAs = replace(IVs,IVs,'_'),
-    AsL = pack_args([{integer,L,0}| abst_vars([RL, '_', '_'] ++ IAs,L)],L,State),
+    IAs = replace(IVs,IVs,_),
+    AsL = pack_args([{integer,L,0}| abst_vars([RL, _, _] ++ IAs,L)],L,State),
     Grd = [is_list_c(RL,L)],
     Rev = {call,L,{remote,L,{atom,L,lists},{atom,L,reverse}},[{var,L,RL}]},
     CL = {clause,L,AsL,[Grd],[Rev]},
-    AsF = pack_args([{integer,L,0}| abst_vars(['_', '_', '_'] ++ IAs,L)],L,State),
+    AsF = pack_args([{integer,L,0}| abst_vars([_, _, _] ++ IAs,L)],L,State),
     CF = {clause,L,AsF,[],[{nil,L}]},
     [CL, CF].
 
@@ -1650,7 +1650,7 @@ template(E,RL,Fun,Go,AT,L,IVs,State) ->
 generator(S,QIVs,P,GV,NGV,E,IVs,RL,Fun,Go,GoI,L,State) ->
     ComAs = abst_vars([RL, Fun, Go],L),
     InitC = generator_init(S,L,GV,RL,Fun,Go,GoI,IVs,State),
-    As = [{integer,L,S + 1}| ComAs ++ abst_vars(replace(QIVs -- [GV],IVs,'_'),L)],
+    As = [{integer,L,S + 1}| ComAs ++ abst_vars(replace(QIVs -- [GV],IVs,_),L)],
     MatchS = next(Go,GoI + 1,L),
     AsM0 = [MatchS| ComAs ++ abst_vars(replace([GV],IVs,NGV),L)],
     AsM = pack_args(AsM0,L,State),
@@ -1666,15 +1666,15 @@ generator(S,QIVs,P,GV,NGV,E,IVs,RL,Fun,Go,GoI,L,State) ->
     [InitC| CsL ++ CsF].
 
 generator_init(S,L,GV,RL,Fun,Go,GoI,IVs,State) ->
-    As0 = abst_vars([RL, Fun, Go] ++ replace([GV],IVs,'_'),L),
+    As0 = abst_vars([RL, Fun, Go] ++ replace([GV],IVs,_),L),
     As = pack_args([{integer,L,S}| As0],L,State),
     Next = next(Go,GoI + 2,L),
-    NAs = pack_args([{integer,L,S + 1}| replace([{var,L,'_'}],As0,Next)],L,State),
+    NAs = pack_args([{integer,L,S + 1}| replace([{var,L,_}],As0,Next)],L,State),
     {clause,L,As,[],[{call,L,{var,L,Fun},NAs}]}.
 
 generator_list(P,GV,NGV,As,AsM,AsC,AsD,Fun,L,State) ->
     As1 = pack_args(replace([{var,L,GV}],As,{cons,L,P,{var,L,NGV}}),L,State),
-    As2 = pack_args(replace([{var,L,GV}],As,{cons,L,{var,L,'_'},{var,L,NGV}}),L,State),
+    As2 = pack_args(replace([{var,L,GV}],As,{cons,L,{var,L,_},{var,L,NGV}}),L,State),
     As3 = pack_args(replace([{var,L,GV}],As,{nil,L}),L,State),
     CM = {clause,L,As1,[],[{call,L,{var,L,Fun},AsM}]},
     CC = {clause,L,As2,[],[{call,L,{var,L,Fun},AsC}]},
@@ -1684,7 +1684,7 @@ generator_list(P,GV,NGV,As,AsM,AsC,AsD,Fun,L,State) ->
 generator_cont(P,GV,NGV,E,As0,AsM,AsC,AsD,Fun,L,State) ->
     As = pack_args(As0,L,State),
     CF1 = {cons,L,P,{var,L,NGV}},
-    CF2 = {cons,L,{var,L,'_'},{var,L,NGV}},
+    CF2 = {cons,L,{var,L,_},{var,L,NGV}},
     CF3 = {nil,L},
     CF4 = {var,L,E},
     CM = {clause,L,[CF1],[],[{call,L,{var,L,Fun},AsM}]},
@@ -1696,7 +1696,7 @@ generator_cont(P,GV,NGV,E,As0,AsM,AsC,AsD,Fun,L,State) ->
     [{clause,L,As,[],[B]}].
 
 filter(E,L,QIVs,S,RL,Fun,Go,GoI,IVs,State) ->
-    IAs = replace(QIVs,IVs,'_'),
+    IAs = replace(QIVs,IVs,_),
     As = pack_args([{integer,L,S}| abst_vars([RL, Fun, Go] ++ IAs,L)],L,State),
     NAs = abst_vars([RL, Fun, Go] ++ IVs,L),
     TNext = next(Go,GoI + 1,L),
@@ -1747,7 +1747,7 @@ aux_vars(Vars,LcN,AllVars) ->
     [(aux_var(Name,LcN,0,1,AllVars)) || Name <- Vars].
 
 aux_var(Name,LcN,QN,N,AllVars) ->
-    qlc:aux_name(lists:concat([Name, LcN, '_', QN, '_']),N,AllVars).
+    qlc:aux_name(lists:concat([Name, LcN, _, QN, _]),N,AllVars).
 
 no_compiler_warning(L) ->
     Anno = erl_anno:new(L),
@@ -1892,7 +1892,7 @@ nos({'fun',L,{clauses,Cs}},S) ->
     {{'fun',L,{clauses,NCs}},S};
 nos({named_fun,Loc,Name,Cs},S) ->
     {{var,NLoc,NName},S1} = case Name of
-        '_'->
+        _->
             S;
         Name->
             nos_pattern({var,Loc,Name},S)
@@ -1913,7 +1913,7 @@ nos({lc,L,E0,Qs0},S) ->
     {E,_} = nos(E0,S1),
     {{lc,L,E,Qs},S};
 nos({var,L,V} = Var,{_LI,Vs,UV,_A,_Sg,State} = S)
-    when V =/= '_'->
+    when V =/= _->
     case used_var(V,Vs,UV) of
         {true,VN}->
             nos_var(L,V,State),
@@ -1937,7 +1937,7 @@ nos_pattern([P0| Ps0],S0,PVs0) ->
     {Ps,S,PVs} = nos_pattern(Ps0,S1,PVs1),
     {[P| Ps],S,PVs};
 nos_pattern({var,L,V},{LI,Vs0,UV,A,Sg,State},PVs0)
-    when V =/= '_'->
+    when V =/= _->
     {Name,Vs,PVs} = case lists:keyfind(V,1,PVs0) of
         {V,VN}->
             _ = used_var(V,Vs0,UV),
@@ -1946,7 +1946,7 @@ nos_pattern({var,L,V},{LI,Vs0,UV,A,Sg,State},PVs0)
             {VN,Vs1} = next_var(V,Vs0,A,LI,UV),
             N = case lists:member(VN,Sg) of
                 true->
-                    '_';
+                    _;
                 false->
                     VN
             end,
@@ -2042,7 +2042,7 @@ embed_vars(Vars,L) ->
     embed_expr({tuple,L,Vars},L).
 
 embed_expr(Expr,L) ->
-    {lc,L,Expr,[{generate,L,{var,L,'_'},{nil,L}}]}.
+    {lc,L,Expr,[{generate,L,{var,L,_},{nil,L}}]}.
 
 var2const(E) ->
     var_map(fun ({var,L,V})->

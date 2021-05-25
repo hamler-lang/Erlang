@@ -579,7 +579,7 @@ paged_output(_,_,_,Acc,[]) ->
     Acc.
 
 more() ->
-    case get_line('more (y/n)? (y) ',"y\n") of
+    case get_line(more (y/n)? (y) ,"y\n") of
         "c\n"->
             more;
         "y\n"->

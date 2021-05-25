@@ -452,7 +452,7 @@ dec_external(#gen{pack = record} = Gen,Typename) ->
     emit(["OldFormat={", lists:join(",",Record), "},", nl, "ASN11994Format =", nl, {call,ext,transform_to_EXTERNAL1994,["OldFormat"]}, com, nl, "{ASN11994Format,", {curr,bytes}, "}"]);
 dec_external(#gen{pack = map},_Typename) ->
     Vars = asn1ct_name:all(term),
-    Names = ['direct-reference', 'indirect-reference', 'data-value-descriptor', encoding],
+    Names = [direct-reference, indirect-reference, data-value-descriptor, encoding],
     Zipped = lists:zip(Names,Vars),
     MapInit = lists:join(",",[["'", N, "'=>", {var,V}] || {N,V} <- Zipped]),
     emit(["OldFormat = #{", MapInit, "}", com, nl, "ASN11994Format =", nl, {call,ext,transform_to_EXTERNAL1994_maps,["OldFormat"]}, com, nl, "{ASN11994Format,", {curr,bytes}, "}"]).
@@ -1127,7 +1127,7 @@ enc_objset_imm(Erule,TypeName,Component,ObjSet,RestFieldNames,Extensible) ->
     Aligned = is_aligned(Erule),
     E = {error,fun ()->
         emit(["exit({'Type not compatible with table constraint" "',{component,", {asis,Component}, "},{value,Val},{unique_name_and_value,'_'}})", nl]) end},
-    [{'cond',[[{eq,{var,"Id"},Key}| enc_obj(Erule,Obj,TypeName,RestFieldNames,Aligned)] || {Key,Obj} <- ObjSet] ++ [['_', case Extensible of
+    [{cond,[[{eq,{var,"Id"},Key}| enc_obj(Erule,Obj,TypeName,RestFieldNames,Aligned)] || {Key,Obj} <- ObjSet] ++ [[_, case Extensible of
         false->
             E;
         true->
@@ -1427,7 +1427,7 @@ gen_dec_line_special(Erule,{typefield,_},_TopType,Comp,DecInfObj) ->
                 {TmpTerm,TempBuf} = asn1ct_imm:dec_slim_cg(Imm,BytesVar),
                 emit([com, nl]),
                 #type{tablecinf = [{objfun,#'Externaltypereference'{module = Xmod,type = Xtype}}]} = Type,
-                gen_dec_open_type(Erule,"ObjFun",{Xmod,Xtype},'_',{'_',{Name,RestFieldNames},'Result',TmpTerm,mandatory}),
+                gen_dec_open_type(Erule,"ObjFun",{Xmod,Xtype},_,{_,{Name,RestFieldNames},'Result',TmpTerm,mandatory}),
                 emit([com, nl, "{", {asis,Cname}, ",{Result,", TempBuf, "}}"]),
                 {[],PrevSt};
             {"got objfun through args","ObjFun"}->
@@ -1445,9 +1445,9 @@ gen_dec_line_special(Erule,{typefield,_},_TopType,Comp,DecInfObj) ->
                 Term = asn1ct_gen:mk_var(asn1ct_name:curr(term)),
                 TmpTerm = asn1ct_gen:mk_var(asn1ct_name:curr(tmpterm)),
                 if Prop =:= mandatory ->
-                    gen_dec_open_type(Erule,"ObjFun",{Xmod,Xtype},'_',{'_',{Name,RestFieldNames},Term,TmpTerm,Prop});true ->
+                    gen_dec_open_type(Erule,"ObjFun",{Xmod,Xtype},_,{_,{Name,RestFieldNames},Term,TmpTerm,Prop});true ->
                     emit(["     {"]),
-                    gen_dec_open_type(Erule,"ObjFun",{Xmod,Xtype},'_',{'_',{Name,RestFieldNames},'_',TmpTerm,Prop}),
+                    gen_dec_open_type(Erule,"ObjFun",{Xmod,Xtype},_,{_,{Name,RestFieldNames},_,TmpTerm,Prop}),
                     emit([",", nl, {curr,tmpbytes}, "}"]) end,
                 {[],PrevSt};
             _->

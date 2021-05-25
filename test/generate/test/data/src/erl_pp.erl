@@ -384,7 +384,7 @@ attr(Name,Args) ->
 attrib(Name,Args) ->
     {first,[$-, {atom,Name}],[{seq,$(,$),[$,],Args}]}.
 
-pname([''| As]) ->
+pname([| As]) ->
     [$.| pname(As)];
 pname([A]) ->
     write(A);
@@ -491,7 +491,7 @@ lexpr({record,_,Rec,Name,Fs},Prec,Opts) ->
     Nl = record_name(Name),
     El = {first,[Rl, Sep, Nl],record_fields(Fs,Opts)},
     maybe_paren(P,Prec,El);
-lexpr({record_field,_,{atom,_,''},F},Prec,Opts) ->
+lexpr({record_field,_,{atom,_,},F},Prec,Opts) ->
     {_L,P,R} = inop_prec('.'),
     El = [$., lexpr(F,R,Opts)],
     maybe_paren(P,Prec,El);
@@ -515,7 +515,7 @@ lexpr({'if',_,Cs},_,Opts) ->
     {list,[{step,'if',if_clauses(Cs,Opts)}, {reserved,'end'}]};
 lexpr({'case',_,Expr,Cs},_,Opts) ->
     {list,[{step,{list,[{step,'case',lexpr(Expr,Opts)}, {reserved,'of'}]},cr_clauses(Cs,Opts)}, {reserved,'end'}]};
-lexpr({'cond',_,Cs},_,Opts) ->
+lexpr({cond,_,Cs},_,Opts) ->
     {list,[{step,leaf("cond"),cond_clauses(Cs,Opts)}, {reserved,'end'}]};
 lexpr({'receive',_,Cs},_,Opts) ->
     {list,[{step,'receive',cr_clauses(Cs,Opts)}, {reserved,'end'}]};
@@ -734,7 +734,7 @@ try_clause({clause,_,[{tuple,_,[C, V, S]}],G,B},Opts) ->
     Bl = body(B,Opts),
     {step,Gl,Bl}.
 
-stack_backtrace({var,_,'_'},El,_Opts) ->
+stack_backtrace({var,_,_},El,_Opts) ->
     El;
 stack_backtrace(S,El,Opts) ->
     El ++ [$:, lexpr(S,0,Opts)].

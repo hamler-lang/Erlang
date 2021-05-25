@@ -577,7 +577,7 @@ leave_file(From,St) ->
     end.
 
 scan_toks(From,St) ->
-    case io:scan_erl_form(St#epp.file,'',St#epp.location) of
+    case io:scan_erl_form(St#epp.file,,St#epp.location) of
         {ok,Toks,Cl}->
             scan_toks(Toks,From,St#epp{location = Cl});
         {error,E,Cl}->
@@ -1011,7 +1011,7 @@ new_location(Ln,{Le,_},{Lf,_}) ->
     {Ln + (Le - Lf),1}.
 
 skip_toks(From,St,[I| Sis]) ->
-    case io:scan_erl_form(St#epp.file,'',St#epp.location) of
+    case io:scan_erl_form(St#epp.file,,St#epp.location) of
         {ok,[{'-',_Lh}, {atom,_Li,ifdef}| _Toks],Cl}->
             skip_toks(From,St#epp{location = Cl},[ifdef, I| Sis]);
         {ok,[{'-',_Lh}, {atom,_Li,ifndef}| _Toks],Cl}->
@@ -1245,8 +1245,8 @@ macro_arg([{'receive',Lr}| Toks],E,Arg) ->
     macro_arg(Toks,['end'| E],[{'receive',Lr}| Arg]);
 macro_arg([{'try',Lr}| Toks],E,Arg) ->
     macro_arg(Toks,['end'| E],[{'try',Lr}| Arg]);
-macro_arg([{'cond',Lr}| Toks],E,Arg) ->
-    macro_arg(Toks,['end'| E],[{'cond',Lr}| Arg]);
+macro_arg([{cond,Lr}| Toks],E,Arg) ->
+    macro_arg(Toks,['end'| E],[{cond,Lr}| Arg]);
 macro_arg([{Rb,Lrb}| Toks],[Rb| E],Arg) ->
     macro_arg(Toks,E,[{Rb,Lrb}| Arg]);
 macro_arg([T| Toks],E,Arg) ->
@@ -1294,7 +1294,7 @@ update_fun_name(Token,#epp{fname = Toks0} = St)
             {var,_,Macro} = Token,
             throw({error,loc(Token),{illegal_function,Macro}});
         _->
-            St#epp{fname = {'_',0}}
+            St#epp{fname = {_,0}}
     end;
 update_fun_name(_Token,St) ->
     St.

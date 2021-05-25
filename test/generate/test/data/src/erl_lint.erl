@@ -70,7 +70,7 @@ value_option(Flag,Default,On,OnVal,Off,OffVal,Opts) ->
 
 -record(usage,{calls = maps:new(),imported = [],used_records = gb_sets:new()::gb_sets:set(atom()),used_types = maps:new()::#{ta() := line()}}).
 
--record(lint,{state = start::start|attribute|function,module = '',behaviour = [],exports = gb_sets:empty()::gb_sets:set(fa()),imports = []::orddict:orddict(fa(),module()),compile = [],records = maps:new()::#{atom() => {line(),Fields::term()}},locals = gb_sets:empty()::gb_sets:set(fa()),no_auto = gb_sets:empty()::gb_sets:set(fa())|all,defined = gb_sets:empty()::gb_sets:set(fa()),on_load = []::[fa()],on_load_line = erl_anno:new(0)::erl_anno:anno(),clashes = [],not_deprecated = [],not_removed = gb_sets:empty()::gb_sets:set(module_or_mfa()),func = [],warn_format = 0,enabled_warnings = [],nowarn_bif_clash = [],errors = [],warnings = [],file = ""::string(),recdef_top = false::boolean(),xqlc = false::boolean(),called = []::[{fa(),line()}],usage = #usage{}::#usage{},specs = maps:new()::#{mfa() => line()},callbacks = maps:new()::#{mfa() => line()},optional_callbacks = maps:new()::#{mfa() => line()},types = maps:new()::#{ta() => #typeinfo{}},exp_types = gb_sets:empty()::gb_sets:set(ta()),in_try_head = false::boolean(),bvt = none::none|[any()],gexpr_context = guard::gexpr_context()}).
+-record(lint,{state = start::start|attribute|function,module = ,behaviour = [],exports = gb_sets:empty()::gb_sets:set(fa()),imports = []::orddict:orddict(fa(),module()),compile = [],records = maps:new()::#{atom() => {line(),Fields::term()}},locals = gb_sets:empty()::gb_sets:set(fa()),no_auto = gb_sets:empty()::gb_sets:set(fa())|all,defined = gb_sets:empty()::gb_sets:set(fa()),on_load = []::[fa()],on_load_line = erl_anno:new(0)::erl_anno:anno(),clashes = [],not_deprecated = [],not_removed = gb_sets:empty()::gb_sets:set(module_or_mfa()),func = [],warn_format = 0,enabled_warnings = [],nowarn_bif_clash = [],errors = [],warnings = [],file = ""::string(),recdef_top = false::boolean(),xqlc = false::boolean(),called = []::[{fa(),line()}],usage = #usage{}::#usage{},specs = maps:new()::#{mfa() => line()},callbacks = maps:new()::#{mfa() => line()},optional_callbacks = maps:new()::#{mfa() => line()},types = maps:new()::#{ta() => #typeinfo{}},exp_types = gb_sets:empty()::gb_sets:set(ta()),in_try_head = false::boolean(),bvt = none::none|[any()],gexpr_context = guard::gexpr_context()}).
 
 -type(lint_state()::#lint{}).
 
@@ -107,8 +107,8 @@ format_error({bad_deprecated,{F,A}}) ->
 format_error({invalid_removed,D}) ->
     io_lib:format("badly formed removed attribute ~tw",[D]);
 format_error({bad_removed,{F,A}})
-    when F =:= '_';
-    A =:= '_'->
+    when F =:= _;
+    A =:= _->
     io_lib:format("at least one function matching ~tw/~w is still expor" "ted",[F, A]);
 format_error({bad_removed,{F,A}}) ->
     io_lib:format("removed function ~tw/~w is still exported",[F, A]);
@@ -571,7 +571,7 @@ start_state(Form,St) ->
     St1 = add_error(Anno,undefined_module,St),
     attribute_state(Form,St1#lint{state = attribute}).
 
-attribute_state({attribute,_L,module,_M},#lint{module = ''} = St) ->
+attribute_state({attribute,_L,module,_M},#lint{module = } = St) ->
     St;
 attribute_state({attribute,L,module,_M},St) ->
     add_error(L,redefine_module,St);
@@ -792,14 +792,14 @@ depr_cat(module,_X,_Mod) ->
 depr_cat(D,_X,_Mod) ->
     [{invalid_deprecated,D}].
 
-depr_fa('_','_',_X,_Mod) ->
+depr_fa(_,_,_X,_Mod) ->
     [];
-depr_fa(F,'_',X,_Mod)
+depr_fa(F,_,X,_Mod)
     when is_atom(F)->
     case lists:filter(fun ({F1,_})->
         F1 =:= F end,X) of
         []->
-            [{bad_deprecated,{F,'_'}}];
+            [{bad_deprecated,{F,_}}];
         _->
             []
     end;
@@ -861,23 +861,23 @@ removed_cat({F,A,Desc} = R,X,Mod) ->
 removed_cat({F,A},X,Mod) ->
     removed_fa(F,A,X,Mod);
 removed_cat(module,X,Mod) ->
-    removed_fa('_','_',X,Mod);
+    removed_fa(_,_,X,Mod);
 removed_cat(R,_X,_Mod) ->
     [{invalid_removed,R}].
 
-removed_fa('_','_',X,_Mod) ->
+removed_fa(_,_,X,_Mod) ->
     case X of
         [_| _]->
-            [{bad_removed,{'_','_'}}];
+            [{bad_removed,{_,_}}];
         []->
             []
     end;
-removed_fa(F,'_',X,_Mod)
+removed_fa(F,_,X,_Mod)
     when is_atom(F)->
     case lists:filter(fun ({F1,_})->
         F1 =:= F end,X) of
         [_| _]->
-            [{bad_removed,{F,'_'}}];
+            [{bad_removed,{F,_}}];
         _->
             []
     end;
@@ -1263,7 +1263,7 @@ head([],_Vt,_Env,St) ->
 pattern(P,Vt,St) ->
     pattern(P,Vt,Vt,[],St).
 
-pattern({var,_Line,'_'},_Vt,_Old,_Bvt,St) ->
+pattern({var,_Line,_},_Vt,_Old,_Bvt,St) ->
     {[],[],St};
 pattern({var,Line,V},_Vt,Old,Bvt,St) ->
     pat_var(V,Line,Old,Bvt,St);
@@ -1503,7 +1503,7 @@ good_string_size_type(default,Ts) ->
 good_string_size_type(_,_) ->
     false.
 
-pat_bit_expr({var,_,'_'},_Old,_Bvt,St) ->
+pat_bit_expr({var,_,_},_Old,_Bvt,St) ->
     {[],[],St};
 pat_bit_expr({var,Ln,V},Old,Bvt,St) ->
     pat_var(V,Ln,Old,Bvt,St);
@@ -2016,11 +2016,11 @@ expr({'fun',Line,Body},Vt,St) ->
         {function,M,F,A}->
             expr_list([M, F, A],Vt,St)
     end;
-expr({named_fun,_,'_',Cs},Vt,St) ->
+expr({named_fun,_,_,Cs},Vt,St) ->
     fun_clauses(Cs,Vt,St);
 expr({named_fun,Line,Name,Cs},Vt,St0) ->
     Nvt0 = [{Name,{bound,unused,[Line]}}],
-    St1 = shadow_vars(Nvt0,Vt,'named fun',St0),
+    St1 = shadow_vars(Nvt0,Vt,named fun,St0),
     Nvt1 = vtupdate(vtsubtract(Vt,Nvt0),Nvt0),
     {Csvt,St2} = fun_clauses(Cs,Nvt1,St1),
     {_,St3} = check_unused_vars(vtupdate(Csvt,Nvt0),[],St2),
@@ -2293,7 +2293,7 @@ check_field({record_field,Lf,{atom,La,F},Val},Name,Fields,Vt,St,Sfs,CheckFun) ->
                     {[],add_error(La,{undefined_field,Name,F},St)}
             end}
     end;
-check_field({record_field,_Lf,{var,La,'_' = F},Val},_Name,_Fields,Vt,St,Sfs,CheckFun) ->
+check_field({record_field,_Lf,{var,La,_ = F},Val},_Name,_Fields,Vt,St,Sfs,CheckFun) ->
     case member(F,Sfs) of
         true->
             {Sfs,{[],add_error(La,bad_multi_field_init,St)}};
@@ -2444,7 +2444,7 @@ check_type({integer,_L,_},SeenVars,St) ->
     {SeenVars,St};
 check_type({atom,_L,_},SeenVars,St) ->
     {SeenVars,St};
-check_type({var,_L,'_'},SeenVars,St) ->
+check_type({var,_L,_},SeenVars,St) ->
     {SeenVars,St};
 check_type({var,L,Name},SeenVars,St) ->
     NewSeenVars = case maps:find(Name,SeenVars) of
@@ -2876,7 +2876,7 @@ icrt_clause({clause,_Line,H,G,B},Vt0,St0) ->
 taint_stack_var(Vt,Pat,#lint{in_try_head = true}) ->
     [{tuple,_,[_, _, {var,_,Stk}]}] = Pat,
     case Stk of
-        '_'->
+        _->
             Vt;
         _->
             lists:map(fun ({V,{bound,Used,Lines}})
@@ -3234,7 +3234,7 @@ check_record_info_call(_Line,La,[{atom,Li,Info}, {atom,_Ln,Name}],St) ->
 check_record_info_call(Line,_La,_As,St) ->
     add_error(Line,illegal_record_info,St).
 
-has_wildcard_field([{record_field,_Lf,{var,_La,'_'},_Val}| _Fs]) ->
+has_wildcard_field([{record_field,_Lf,{var,_La,_},_Val}| _Fs]) ->
     true;
 has_wildcard_field([_| Fs]) ->
     has_wildcard_field(Fs);

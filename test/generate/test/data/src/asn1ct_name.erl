@@ -58,7 +58,7 @@ new(V) ->
 prev(V) ->
     case req({prev,V}) of
         none->
-            exit('cant get prev of none');
+            exit(cant get prev of none);
         Rep->
             Rep
     end.

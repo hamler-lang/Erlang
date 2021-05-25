@@ -12,15 +12,15 @@
 
 -record(xref, {version = 1,mode = functions,variables = not_set_up,modules = dict:new(),applications = dict:new(),releases = dict:new(),library_path = [],libraries = dict:new(),builtins_default = false,recurse_default = false,verbose_default = false,warnings_default = true}).
 
--record(xref_mod, {name = '',app_name = [],dir = "",mtime,builtins,info,no_unresolved = 0,data}).
+-record(xref_mod, {name = ,app_name = [],dir = "",mtime,builtins,info,no_unresolved = 0,data}).
 
--record(xref_app, {name = '',rel_name = [],vsn = [],dir = ""}).
+-record(xref_app, {name = ,rel_name = [],vsn = [],dir = ""}).
 
--record(xref_rel, {name = '',dir = ""}).
+-record(xref_rel, {name = ,dir = ""}).
 
--record(xref_lib, {name = '',dir = ""}).
+-record(xref_lib, {name = ,dir = ""}).
 
--record(xref_var, {name = '',value,vtype,otype,type}).
+-record(xref_var, {name = ,value,vtype,otype,type}).
 
 -file("xref_reader.erl", 50).
 
@@ -156,7 +156,7 @@ expr({'fun',Line,{function,Mod,Name,{integer,_,Arity}}},S) ->
     As = lists:duplicate(Arity,{atom,Line,foo}),
     external_call(erlang,apply,[Mod, Name, list2term(As)],Line,true,S);
 expr({'fun',Line,{function,Mod,Name,_Arity}},S) ->
-    As = {var,Line,'_'},
+    As = {var,Line,_},
     external_call(erlang,apply,[Mod, Name, As],Line,true,S);
 expr({'fun',Line,{function,Name,Arity},_Extra},S) ->
     handle_call(local,S#xrefr.module,Name,Arity,Line,S);
@@ -166,7 +166,7 @@ expr({'fun',Line,{function,Name,Arity}},S) ->
     handle_call(local,S#xrefr.module,Name,Arity,Line,S);
 expr({'fun',_Line,{clauses,Cs}},S) ->
     clauses(Cs,S);
-expr({named_fun,_Line,'_',Cs},S) ->
+expr({named_fun,_Line,_,Cs},S) ->
     clauses(Cs,S);
 expr({named_fun,_Line,Name,Cs},S) ->
     S1 = S#xrefr{funvars = [Name| S#xrefr.funvars]},
