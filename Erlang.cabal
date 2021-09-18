@@ -46,6 +46,10 @@ library
     hs-source-dirs:   src
     default-language: Haskell2010
 
+build-tools:
+  alex
+  happy
+
 test-suite Erlang-test
     default-language: Haskell2010
     type:             exitcode-stdio-1.0
